@@ -49,29 +49,22 @@ For full details see [`docs/tech/tech-stack.md`](docs/tech/tech-stack.md).
 
 ## Getting Started
 
-### Prerequisites
-- Node v25.2.1
-- pnpm v11.0.9
+See [SETUP.md](SETUP.md) for full setup instructions including prerequisites, AWS configuration, GitHub PAT setup, and Claude Code configuration.
 
-### Install dependencies
+### Quick Start
 ```bash
+# Clone the repo
+git clone https://github.com/CumulusCycles/EverydayAI-Tutor.git
+cd EverydayAI-Tutor
+
+# Copy environment variables
+cp .env.example .env
+# Add your GITHUB_TOKEN to .env
+
+# Install frontend dependencies
 cd frontend
 pnpm install
-```
-
-### Run locally
-```bash
 pnpm dev
-```
-
-### Run tests
-```bash
-pnpm test
-```
-
-### Build for production
-```bash
-pnpm build
 ```
 
 ---
