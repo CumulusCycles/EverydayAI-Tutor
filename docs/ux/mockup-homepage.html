@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EverydayAI Tutor — Homepage Mockup</title>
+    <link rel="icon" type="image/x-icon" href="../../img/logo.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --navy: #0f172a;
+        --charcoal: #334155;
+        --orange: #f97316;
+        --blue: #5b6ef5;
+        --white: #f7f5f2;
+        --beige: #eadccb;
+        --gray: #e5e7eb;
+        --slate: #64748b;
+        --green: #22c55e;
+        --radius: 12px;
+        --font: "Sora", sans-serif;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--white);
+        color: var(--charcoal);
+        line-height: 1.6;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* ── NAV ── */
+      nav {
+        background: #fff;
+        border-bottom: 1px solid var(--gray);
+        padding: 0 48px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-logo img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .nav-logo-text {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .nav-logo-text span {
+        color: var(--orange);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--charcoal);
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--orange);
+      }
+
+      .btn-subscribe {
+        background: var(--orange);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 22px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      .btn-subscribe:hover {
+        opacity: 0.88;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        background: #fff;
+        padding: 80px 48px 72px;
+        display: flex;
+        align-items: center;
+        gap: 64px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .hero-left {
+        flex: 1;
+      }
+
+      .hero-eyebrow {
+        display: inline-block;
+        background: #fff0e6;
+        color: var(--orange);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        font-size: 52px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.1;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+      }
+
+      .hero h1 span {
+        color: var(--orange);
+      }
+
+      .hero-sub {
+        font-size: 19px;
+        color: var(--slate);
+        margin-bottom: 36px;
+        line-height: 1.5;
+      }
+
+      .hero-cta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .btn-primary {
+        background: var(--orange);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 16px;
+        font-weight: 700;
+        padding: 14px 30px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.88;
+      }
+
+      .hero-note {
+        font-size: 14px;
+        color: var(--slate);
+      }
+
+      .hero-right {
+        flex: 1;
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .hero-right img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray);
+      }
+
+      /* ── SECTION COMMONS ── */
+      section {
+        padding: 64px 48px;
+      }
+
+      .section-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 32px;
+      }
+
+      .section-header h2 {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--navy);
+      }
+
+      .section-header h2 span {
+        color: var(--orange);
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orange);
+        margin-left: 4px;
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+      }
+
+      .view-all {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--orange);
+      }
+
+      .view-all:hover {
+        text-decoration: underline;
+      }
+
+      /* ── WHAT YOU'LL LEARN ── */
+      .learn {
+        background: var(--beige);
+      }
+
+      .learn-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+
+      .learn-card {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 28px 24px;
+        text-align: center;
+        border: 1px solid var(--gray);
+      }
+
+      .learn-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #fff0e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        font-size: 22px;
+      }
+
+      .learn-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+
+      .learn-card p {
+        font-size: 13px;
+        color: var(--slate);
+        line-height: 1.5;
+      }
+
+      /* ── CARD GRID ── */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .content-card {
+        background: #fff;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray);
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+
+      .content-card:hover {
+        border-color: var(--orange);
+      }
+
+      .card-thumb {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        background: var(--gray);
+        display: block;
+      }
+
+      .card-thumb-placeholder {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #e5e7eb, #d6d9de);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--slate);
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .card-date {
+        font-size: 12px;
+        color: var(--slate);
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+
+      .card-desc {
+        font-size: 13px;
+        color: var(--charcoal);
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .card-link {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--orange);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .card-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ── VIDEOS BG ── */
+      .videos {
+        background: var(--white);
+      }
+
+      /* ── BLOG BG ── */
+      .blog {
+        background: #fff;
+      }
+
+      /* ── CTA BANNER ── */
+      .cta-banner {
+        background: var(--navy);
+        padding: 64px 48px;
+        text-align: center;
+      }
+
+      .cta-banner h2 {
+        font-size: 34px;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+
+      .cta-banner h2 span {
+        color: var(--orange);
+      }
+
+      .cta-banner p {
+        font-size: 17px;
+        color: #94a3b8;
+        margin-bottom: 32px;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: #fff;
+        border-top: 1px solid var(--gray);
+        padding: 48px 48px 24px;
+      }
+
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 48px;
+        margin-bottom: 40px;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .footer-logo img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .footer-logo-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .footer-logo-text span {
+        color: var(--orange);
+      }
+
+      .footer-tagline {
+        font-size: 13px;
+        color: var(--slate);
+        margin-top: 4px;
+      }
+
+      .footer-nav h4 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--navy);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+
+      .footer-nav ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .footer-nav a {
+        font-size: 14px;
+        color: var(--slate);
+        transition: color 0.2s;
+      }
+
+      .footer-nav a:hover {
+        color: var(--orange);
+      }
+
+      .footer-subscribe h4 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--navy);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+
+      .footer-subscribe p {
+        font-size: 13px;
+        color: var(--slate);
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--gray);
+        padding-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .footer-bottom p {
+        font-size: 13px;
+        color: var(--slate);
+      }
+
+      .footer-bottom a {
+        font-size: 13px;
+        color: var(--slate);
+        transition: color 0.2s;
+      }
+
+      .footer-bottom a:hover {
+        color: var(--orange);
+      }
+
+      .orange-underline {
+        display: inline-block;
+        width: 40px;
+        height: 2px;
+        background: var(--orange);
+        border-radius: 2px;
+        margin: 0 8px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-logo">
+        <img
+          src="../branding/images/yt-channel-logo.png"
+          alt="EverydayAI Tutor Logo"
+        />
+        <span class="nav-logo-text">Everyday<span>AI</span> Tutor</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/videos">Videos</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <button
+        class="btn-subscribe"
+        onclick="
+          window.open('https://www.youtube.com/@EverydayAITutor', '_blank')
+        "
+      >
+        Subscribe on YouTube
+      </button>
+    </nav>
+
+    <!-- HERO -->
+    <div style="background: #fff; border-bottom: 1px solid var(--gray)">
+      <div class="hero">
+        <div class="hero-left">
+          <span class="hero-eyebrow">Practical AI for Everyday People</span>
+          <h1>Learn AI.<br /><span>Without</span> the Jargon.</h1>
+          <p class="hero-sub">
+            From understanding what AI is to building with it — EverydayAI Tutor
+            takes you step by step, no technical background required.
+          </p>
+          <div class="hero-cta">
+            <button
+              class="btn-primary"
+              onclick="
+                window.open(
+                  'https://www.youtube.com/@EverydayAITutor',
+                  '_blank',
+                )
+              "
+            >
+              Subscribe on YouTube
+            </button>
+            <span class="hero-note">Free. No sign-up required.</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img
+            src="../branding/images/yt-channel-video-thumbnail.png"
+            alt="EverydayAI Tutor"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT YOU'LL LEARN -->
+    <section class="learn">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>What You'll Learn</h2>
+        </div>
+        <div class="learn-grid">
+          <div class="learn-card">
+            <div class="learn-icon">🧠</div>
+            <h3>Understand AI</h3>
+            <p>
+              What AI actually is, how it works, and why it matters — in plain
+              English.
+            </p>
+          </div>
+          <div class="learn-card">
+            <div class="learn-icon">💬</div>
+            <h3>Use AI Tools</h3>
+            <p>
+              Hands-on with ChatGPT, Claude, and other tools you can start using
+              today.
+            </p>
+          </div>
+          <div class="learn-card">
+            <div class="learn-icon">✍️</div>
+            <h3>Master Prompting</h3>
+            <p>
+              Communicate with AI effectively and get dramatically better
+              results.
+            </p>
+          </div>
+          <div class="learn-card">
+            <div class="learn-icon">⚙️</div>
+            <h3>Build with AI</h3>
+            <p>
+              Eventually: Claude Code, agentic AI, and building real things with
+              AI tools.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LATEST VIDEOS -->
+    <section class="videos">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>Latest Videos</h2>
+          <a href="/videos" class="view-all">View all videos →</a>
+        </div>
+        <div class="card-grid">
+          <div class="content-card">
+            <img
+              src="../branding/images/yt-channel-video-thumbnail.png"
+              alt="Video thumbnail"
+              class="card-thumb"
+            />
+            <div class="card-body">
+              <p class="card-date">May 9, 2026</p>
+              <h3 class="card-title">
+                What AI Actually Is — Explained for Beginners
+              </h3>
+              <p class="card-desc">
+                Traditional AI, Generative AI, and Agentic AI — explained
+                simply, without the tech jargon.
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Watch on YouTube →</a
+              >
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="card-thumb-placeholder">Thumbnail coming soon</div>
+            <div class="card-body">
+              <p class="card-date">Coming soon</p>
+              <h3 class="card-title">
+                How AI Actually Thinks — LLMs Explained
+              </h3>
+              <p class="card-desc">
+                What is a Large Language Model? How did it learn? And why does
+                it sometimes get things wrong?
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Watch on YouTube →</a
+              >
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="card-thumb-placeholder">Thumbnail coming soon</div>
+            <div class="card-body">
+              <p class="card-date">Coming soon</p>
+              <h3 class="card-title">
+                Your First AI Conversation — Getting Started
+              </h3>
+              <p class="card-desc">
+                Choose the right tool, get set up, and have your very first real
+                AI conversation — step by step.
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Watch on YouTube →</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LATEST BLOG POSTS -->
+    <section class="blog">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>Latest Posts</h2>
+          <a href="/blog" class="view-all">View all posts →</a>
+        </div>
+        <div class="card-grid">
+          <div class="content-card">
+            <div class="card-thumb-placeholder">Blog thumbnail</div>
+            <div class="card-body">
+              <p class="card-date">May 9, 2026</p>
+              <h3 class="card-title">
+                5 Ways to Use AI in Your Daily Life Right Now
+              </h3>
+              <p class="card-desc">
+                You don't need to be technical to start benefiting from AI
+                today. Here are five practical starting points.
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Read post →</a
+              >
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="card-thumb-placeholder">Blog thumbnail</div>
+            <div class="card-body">
+              <p class="card-date">May 5, 2026</p>
+              <h3 class="card-title">
+                ChatGPT vs Claude — Which Should You Start With?
+              </h3>
+              <p class="card-desc">
+                Both are excellent. Here's a plain-English breakdown to help you
+                choose the right one for your needs.
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Read post →</a
+              >
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="card-thumb-placeholder">Blog thumbnail</div>
+            <div class="card-body">
+              <p class="card-date">April 28, 2026</p>
+              <h3 class="card-title">
+                Why AI Gets Things Wrong — And What to Do About It
+              </h3>
+              <p class="card-desc">
+                Understanding AI hallucination makes you a smarter, more
+                effective AI user. Here's what you need to know.
+              </p>
+              <a
+                href="#"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Read post →</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <div class="cta-banner">
+      <div style="max-width: 640px; margin: 0 auto">
+        <h2>Ready to start learning <span>AI?</span></h2>
+        <p>
+          Join the EverydayAI Tutor community and go from curious beginner to
+          confident AI user — one video at a time.
+        </p>
+        <button
+          class="btn-primary"
+          onclick="
+            window.open('https://www.youtube.com/@EverydayAITutor', '_blank')
+          "
+        >
+          Subscribe on YouTube — It's Free
+        </button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div>
+            <div class="footer-logo">
+              <img
+                src="../branding/images/yt-channel-logo.png"
+                alt="EverydayAI Tutor Logo"
+              />
+              <span class="footer-logo-text"
+                >Everyday<span>AI</span> Tutor</span
+              >
+            </div>
+            <p class="footer-tagline">Practical AI for Everyday People</p>
+          </div>
+
+          <div class="footer-nav">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/videos">Videos</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-subscribe">
+            <h4>YouTube Channel</h4>
+            <p>
+              Free AI tutorials for everyday people — new videos published
+              regularly.
+            </p>
+            <button
+              class="btn-subscribe"
+              onclick="
+                window.open(
+                  'https://www.youtube.com/@EverydayAITutor',
+                  '_blank',
+                )
+              "
+            >
+              Subscribe on YouTube
+            </button>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 EverydayAI Tutor. All rights reserved.</p>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
