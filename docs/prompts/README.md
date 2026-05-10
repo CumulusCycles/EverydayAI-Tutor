@@ -37,3 +37,4 @@ prompts/
 | 05 | `session-05-ci-cd.md` | `feature/ci-cd` | GitHub Actions workflow for frontend deploy and CDK deploy |
 | 06 | `session-06-fixes.md` | various | Bug fixes and workflow corrections |
 | 07 | `session-07-knowledge-base-content.md` | `feature/knowledge-base-content` | Initial knowledge base markdown files for Bedrock Knowledge Base |
+| 08 | `session-08-chatbot-infrastructure.md` | `feature/chatbot-infrastructure` | KB S3 bucket, Bedrock Knowledge Base, S3 Vectors CDK infrastructure and GHA workflow updates |

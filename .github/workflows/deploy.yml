@@ -6,6 +6,7 @@ on:
     paths:
       - 'frontend/**'
       - 'infrastructure/**'
+      - 'knowledge-base/**'
   workflow_dispatch:
 
 permissions:
@@ -19,6 +20,7 @@ jobs:
     outputs:
       frontend: ${{ steps.detect.outputs.frontend }}
       infrastructure: ${{ steps.detect.outputs.infrastructure }}
+      knowledge_base: ${{ steps.detect.outputs.knowledge_base }}
     steps:
       - uses: actions/checkout@v6.0.2
         with:
@@ -29,6 +31,7 @@ jobs:
           changed=$(git diff --name-only HEAD^ HEAD)
           echo "frontend=$(echo "$changed" | grep -q '^frontend/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "infrastructure=$(echo "$changed" | grep -q '^infrastructure/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "knowledge_base=$(echo "$changed" | grep -q '^knowledge-base/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
   frontend:
     name: Deploy Frontend
@@ -117,3 +120,26 @@ jobs:
       - name: Deploy CDK stack
         run: pnpm exec cdk deploy --require-approval never
         working-directory: infrastructure
+
+  knowledge-base:
+    name: Sync Knowledge Base
+    needs: changes
+    if: needs.changes.outputs.knowledge_base == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync knowledge base to S3
+        run: aws s3 sync knowledge-base/ s3://${{ secrets.KB_BUCKET_NAME }} --delete
+
+      - name: Trigger Bedrock KB ingestion
+        run: |
+          aws bedrock-agent start-ingestion-job \
+            --knowledge-base-id ${{ secrets.BEDROCK_KB_ID }} \
+            --data-source-id ${{ secrets.BEDROCK_DS_ID }}
