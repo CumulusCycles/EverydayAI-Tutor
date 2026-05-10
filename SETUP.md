@@ -42,11 +42,23 @@ claude --version
 - All infrastructure deploys to `us-east-1`
 
 ### AWS CLI Configuration (Local Development Only)
-For local development, configure the AWS CLI with credentials that have sufficient permissions to run `cdk diff` and `cdk deploy` manually.
+For local development, configure the AWS CLI with a scoped IAM user — not your root account.
+
+**Create a local dev IAM user:**
+1. Go to AWS Console → IAM → Users → Create User
+2. Name it something like `everydayai-tutor-local-dev`
+3. Go to IAM → Policies → Create Policy
+4. Switch to JSON editor and paste the contents of `docs/tech/iam-policy-local-dev.json`
+5. Name the policy `EverydayAITutorLocalDevPolicy`
+6. Attach the policy to your IAM user
+7. Go to the user → Security Credentials → Create Access Key
+8. Select **Local code** as the use case
+9. Copy the Access Key ID and Secret Access Key
 
 ```bash
 aws configure
 ```
+Enter your Access Key ID, Secret Access Key, and default region (`us-east-1`).
 
 Verify:
 ```bash

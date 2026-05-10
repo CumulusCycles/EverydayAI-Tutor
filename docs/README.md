@@ -37,7 +37,8 @@ See `tech/README.md` for full details.
 |---|---|
 | `tech-stack.md` | Full technology stack — frontend, infrastructure, CI/CD, testing, and versioning |
 | `architecture-diagram.md` | Full system architecture diagrams — launch infrastructure, future state, CI/CD pipeline, and agentic search flow |
-| `iam-policy.json` | Scoped IAM policy for deploying the site |
+| `iam-policy.json` | IAM policy for the GitHub Actions OIDC deploy role |
+| `iam-policy-local-dev.json` | IAM policy for local development IAM user |
 
 ---
 
@@ -66,4 +67,4 @@ See `prompts/README.md` for full details.
 
 | Location | File | Description |
 |---|---|---|
-| `branding/images/` | `favicon.ico` | Favicon |
+| `../img/` | `logo.ico` | Favicon |
