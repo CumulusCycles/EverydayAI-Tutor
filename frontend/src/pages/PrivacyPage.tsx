@@ -39,7 +39,7 @@ const sections: Section[] = [
   {
     heading: 'Future changes',
     body: [
-      'This privacy policy will be updated when features that involve personal data are introduced — for example, email sign-up, user accounts, or newsletter subscriptions.',
+      'This policy will be updated if new features require data collection.',
       'Any future data collection will be clearly disclosed and handled in compliance with applicable privacy laws.',
     ],
   },

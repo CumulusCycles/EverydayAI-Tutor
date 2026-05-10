@@ -155,9 +155,6 @@ Claude Code uses a Fine-Grained Personal Access Token (PAT) to create feature br
 
 The following are intentionally excluded from the initial build but are natural next steps as the site grows:
 
-- User authentication
-- Course or membership content
-
 ### Backend & Data Layer
 - **DynamoDB** — structured content storage (blog posts, YouTube video titles, descriptions, publish dates, URLs, tags)
 - **Lambda functions / API Gateway** — all Lambdas to be written in Python
