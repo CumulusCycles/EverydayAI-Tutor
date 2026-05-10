@@ -31,12 +31,29 @@ Track bug fixes and workflow corrections as they arise during the build.
 
 ### Result
 
-Done. Both issues fixed in .github/workflows/deploy.yml:
-
-  1. pnpm cache path — both cache-dependency-path entries now point to pnpm-lock.yaml at the repo root (where the single monorepo lockfile actually lives).
-  2. Action versions — all three updated to Node.js 24-compatible v6 releases, verified against the live GitHub tags pages:
-    - actions/checkout@v4 → @v6.0.2 (Jan 2026)
-    - actions/setup-node@v4 → @v6.4.0 (Apr 2026)
-    - pnpm/action-setup@v4 → @v6.0.6 (May 2026)
 
 ---
+
+## Fix 02 — pnpm esbuild Build Scripts Blocked in CI
+
+**Branch:** `fix/pnpm-esbuild`
+
+### Problem
+GitHub Actions frontend deploy failing with `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@0.25.12`. The GHA pnpm environment is blocking esbuild's build scripts despite `.npmrc` having `allow-build=esbuild` locally.
+
+### Prompt 1
+
+> The GitHub Actions frontend deploy job is failing with [ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@0.25.12. Fix this in the most appropriate way — check .npmrc at the repo root and .github/workflows/deploy.yml and ensure esbuild build scripts are allowed in the CI environment. Do not use pnpm approve-builds interactively.
+
+### Result
+
+Two files changed:
+
+  pnpm-workspace.yaml — replaced onlyBuiltDependencies (pnpm ≤10 syntax) with allowBuilds (pnpm 11 syntax). The old key was silently ignored by pnpm 11, leaving strictDepBuilds: 
+  true (the new default) blocking esbuild's postinstall on every clean CI install.
+
+  .npmrc — removed allow-build=esbuild, which was never a valid pnpm config key.
+
+  The workflow itself (deploy.yml) needed no changes — the install command and flags were correct. The failure was entirely in the config files. pnpm install exits clean locally
+  with the new config; CI will now find allowBuilds: esbuild: true, permit the postinstall script, and proceed.
+
