@@ -132,14 +132,8 @@ export class EverydayAiTutorStack extends cdk.Stack {
 
     // ── Bedrock Knowledge Base ────────────────────────────────────────────────
 
-    // Private S3 bucket for Knowledge Base content
-    const kbBucket = new s3.Bucket(this, 'KnowledgeBaseBucket', {
-      bucketName: 'aieverydaytutor-knowledge-base',
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      versioned: true,
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
-      encryption: s3.BucketEncryption.S3_MANAGED,
-    })
+    // Import existing KB S3 bucket (bucket was created in a prior deploy attempt)
+    const kbBucket = s3.Bucket.fromBucketName(this, 'KnowledgeBaseBucket', 'aieverydaytutor-knowledge-base')
 
     // S3 vector bucket for storing embeddings
     const vectorBucket = new s3vectors.CfnVectorBucket(this, 'KnowledgeBaseVectorBucket', {
@@ -215,10 +209,11 @@ export class EverydayAiTutorStack extends cdk.Stack {
         s3VectorsConfiguration: {
           vectorBucketArn: vectorBucket.attrVectorBucketArn,
           indexArn: vectorIndex.attrIndexArn,
-          indexName: KB_INDEX_NAME,
         },
       },
     })
+
+    knowledgeBase.node.addDependency(kbRole)
 
     // Data source — KB S3 bucket
     const dataSource = new bedrock.CfnDataSource(this, 'KnowledgeBaseDataSource', {
