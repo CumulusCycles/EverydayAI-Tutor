@@ -6,6 +6,7 @@ on:
     paths:
       - 'frontend/**'
       - 'infrastructure/**'
+      - 'chatbot/**'
       - 'knowledge-base/**'
   workflow_dispatch:
 
@@ -30,7 +31,7 @@ jobs:
         run: |
           changed=$(git diff --name-only HEAD^ HEAD)
           echo "frontend=$(echo "$changed" | grep -q '^frontend/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
-          echo "infrastructure=$(echo "$changed" | grep -q '^infrastructure/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "infrastructure=$(echo "$changed" | grep -qE '^(infrastructure|chatbot)/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "knowledge_base=$(echo "$changed" | grep -q '^knowledge-base/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
   frontend:
