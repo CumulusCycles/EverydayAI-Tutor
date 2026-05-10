@@ -5,10 +5,13 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as targets from 'aws-cdk-lib/aws-route53-targets'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 
 const DOMAIN = 'aieverydaytutor.com'
 const WWW_DOMAIN = `www.${DOMAIN}`
+const GITHUB_ORG_REPO = 'CumulusCycles/EverydayAI-Tutor'
+const GITHUB_BRANCH = 'main'
 
 export class EverydayAiTutorStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -72,6 +75,59 @@ export class EverydayAiTutorStack extends cdk.Stack {
       domainName: distribution.distributionDomainName,
     })
 
+    // GitHub Actions OIDC provider (native CloudFormation — no Lambda custom resource)
+    const githubOidcProvider = new iam.OidcProviderNative(this, 'GitHubOidcProvider', {
+      url: 'https://token.actions.githubusercontent.com',
+      clientIds: ['sts.amazonaws.com'],
+      thumbprints: ['6938fd4d98bab03faadb97b34396831e3780aea1'],
+    })
+
+    // Scoped to CumulusCycles/EverydayAI-Tutor, main branch only
+    const deployRole = new iam.Role(this, 'GitHubActionsDeployRole', {
+      roleName: 'GitHubActionsDeployRole',
+      assumedBy: new iam.WebIdentityPrincipal(githubOidcProvider.openIdConnectProviderArn, {
+        StringEquals: {
+          'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
+          'token.actions.githubusercontent.com:sub': `repo:${GITHUB_ORG_REPO}:ref:refs/heads/${GITHUB_BRANCH}`,
+        },
+      }),
+    })
+
+    // Grants permission to assume CDK bootstrap roles only (docs/tech/iam-policy.json)
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'AssumeCDKRoles',
+        effect: iam.Effect.ALLOW,
+        actions: ['sts:AssumeRole', 'iam:PassRole'],
+        resources: [
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-lookup-role-${this.account}-us-east-1`,
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-deploy-role-${this.account}-us-east-1`,
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-file-publishing-role-${this.account}-us-east-1`,
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-image-publishing-role-${this.account}-us-east-1`,
+        ],
+      }),
+    )
+
+    // Grants permissions needed by the frontend deploy job
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'FrontendDeploy',
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'cloudformation:DescribeStacks',
+          's3:PutObject',
+          's3:GetObject',
+          's3:DeleteObject',
+          's3:ListBucket',
+          's3:ListBucketMultipartUploads',
+          's3:AbortMultipartUpload',
+          'cloudfront:CreateInvalidation',
+          'cloudfront:GetInvalidation',
+        ],
+        resources: ['*'],
+      }),
+    )
+
     new cdk.CfnOutput(this, 'DistributionId', {
       value: distribution.distributionId,
     })
@@ -82,6 +138,10 @@ export class EverydayAiTutorStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'BucketName', {
       value: siteBucket.bucketName,
+    })
+
+    new cdk.CfnOutput(this, 'GitHubActionsDeployRoleArn', {
+      value: deployRole.roleArn,
     })
   }
 }
