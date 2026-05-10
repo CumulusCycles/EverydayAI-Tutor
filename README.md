@@ -18,13 +18,13 @@ AIEverydayTutor.com is a channel hub for the EverydayAI Tutor YouTube channel. I
 /
 ├── frontend/          # React + Vite + TypeScript application
 ├── infrastructure/    # AWS CDK TypeScript stack
-├── docs/              # Project documentation
-│   ├── README.md      # Docs index
-│   ├── branding/      # Brand identity, color palette, and image assets
-│   ├── tech/          # Technical documentation — stack and architecture
-│   └── ux/            # UX documentation — site structure and mockups
-└── img/               # Favicon and root-level image assets
-    └── logo.ico
+└── docs/              # Project documentation
+    ├── README.md      # Docs index
+    ├── branding/      # Brand identity, color palette, and image assets
+    │   └── images/    # Logo, banner, thumbnails, favicon
+    ├── tech/          # Technical documentation — stack and architecture
+    ├── ux/            # UX documentation — site structure and mockups
+    └── prompts/       # Claude Code prompt log — pedagogical record
 ```
 
 ---
@@ -34,13 +34,13 @@ AIEverydayTutor.com is a channel hub for the EverydayAI Tutor YouTube channel. I
 | Layer | Technology |
 |---|---|
 | Frontend | React + Vite + TypeScript |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS v4 |
 | Routing | React Router |
 | Infrastructure | AWS CDK (TypeScript) |
 | Hosting | AWS S3 + CloudFront |
 | DNS | AWS Route 53 |
 | SSL | AWS ACM |
-| CI/CD | GitHub Actions |
+| CI/CD | GitHub Actions (OIDC — no stored AWS credentials) |
 | Package Manager | pnpm |
 
 For full details see [`docs/tech/tech-stack.md`](docs/tech/tech-stack.md).
@@ -71,7 +71,7 @@ pnpm dev
 
 ## Deployment
 
-Infrastructure is provisioned with AWS CDK and deployed automatically via GitHub Actions on push to `main`.
+Infrastructure is provisioned with AWS CDK and deployed automatically via GitHub Actions on push to `main`. GitHub Actions authenticates with AWS via OIDC — no long-lived credentials are stored anywhere.
 
 - Frontend changes → builds with Vite → syncs to S3 → CloudFront cache invalidation
 - Infrastructure changes → `cdk deploy`
@@ -87,8 +87,9 @@ All project documentation lives in [`docs/`](docs/README.md).
 | Folder | Contents |
 |---|---|
 | [`docs/branding/`](docs/branding/) | Brand guide, color palette, image assets |
-| [`docs/tech/`](docs/tech/) | Tech stack, architecture diagrams |
+| [`docs/tech/`](docs/tech/) | Tech stack, architecture diagrams, IAM policy |
 | [`docs/ux/`](docs/ux/) | Site structure, homepage mockup |
+| [`docs/prompts/`](docs/prompts/) | Claude Code prompt log |
 
 ---
 

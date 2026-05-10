@@ -66,4 +66,4 @@ See `prompts/README.md` for full details.
 
 | Location | File | Description |
 |---|---|---|
-| `../img/` | `logo.ico` | Favicon |
+| `branding/images/` | `favicon.ico` | Favicon |

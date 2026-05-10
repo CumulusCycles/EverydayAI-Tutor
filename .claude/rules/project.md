@@ -15,8 +15,8 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 │   ├── branding/      # Brand guide, color palette, image assets
 │   ├── tech/          # Tech stack, architecture diagrams
 │   └── ux/            # Site structure, homepage mockup
-└── img/               # Favicon
-    └── logo.ico
+└── docs/branding/images/
+    └── favicon.ico
 ```
 
 ## Documentation — Read Before Building

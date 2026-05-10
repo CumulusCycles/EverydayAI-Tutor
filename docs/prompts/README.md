@@ -27,4 +27,4 @@ prompts/
 | 01 | `session-01-project-scaffold.md` | `feature/project-scaffold` | Initial monorepo scaffold — frontend and infrastructure setup |
 | 02 | `session-02-homepage.md` | `feature/homepage` | Homepage, Navbar, Footer, ContentCard, static data files |
 | 03 | `session-03-pages.md` | `feature/pages` | Videos, Blog, About, and Privacy pages |
-
+| 05 | `session-05-ci-cd.md` | `feature/ci-cd` | GitHub Actions workflow for frontend deploy and CDK deploy |

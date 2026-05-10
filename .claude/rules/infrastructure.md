@@ -48,13 +48,14 @@ pnpm install
 cdk deploy
 ```
 
-## Python & Virtual Environments
+## GitHub Actions Authentication — OIDC
 
-- **Always use `uv` and `uvx`** for Python package management and virtual environments — never `pip`, `pipenv`, or `poetry`
-- Create virtual environments with `uv venv`
-- Install packages with `uv pip install`
-- Run tools with `uvx`
-- This applies to all Python work including Lambda functions and any scripts
+- GitHub Actions authenticates with AWS via **OpenID Connect (OIDC)** — no long-lived credentials ever
+- The OIDC provider and `GitHubActionsDeployRole` are provisioned in the CDK stack (`lib/stack.ts`)
+- GitHub Actions assumes the role per-run via `aws-actions/configure-aws-credentials`
+- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only
+- **Never** store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in GitHub secrets
+- Role policy is documented in `docs/tech/iam-policy.json`
 
 ## Safety Rules
 
@@ -62,3 +63,4 @@ cdk deploy
 - Always run `cdk diff` before `cdk deploy` to review changes
 - Call out any changes to IAM permissions, S3 policies, or CloudFront behaviors before applying
 - Never hardcode AWS account IDs, ARNs, or secrets in CDK code — use SSM Parameter Store or CDK context
+- Never store AWS credentials in GitHub secrets — use OIDC
