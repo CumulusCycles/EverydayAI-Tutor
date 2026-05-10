@@ -32,7 +32,7 @@ export class ChatbotStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ['bedrock:InvokeModel'],
         resources: [
-          'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0',
+          'arn:aws:bedrock:*::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0',
           `arn:aws:bedrock:us-east-1:${cdk.Stack.of(this).account}:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0`,
         ],
       }),
