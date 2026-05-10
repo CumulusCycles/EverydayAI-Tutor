@@ -28,6 +28,17 @@ export class ChatbotStack extends cdk.Stack {
 
     lambdaRole.addToPolicy(
       new iam.PolicyStatement({
+        sid: 'BedrockInvokeModel',
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0',
+        ],
+      }),
+    )
+
+    lambdaRole.addToPolicy(
+      new iam.PolicyStatement({
         sid: 'KBBucketRead',
         effect: iam.Effect.ALLOW,
         actions: ['s3:GetObject'],
