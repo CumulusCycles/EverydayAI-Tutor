@@ -19,7 +19,7 @@ jobs:
       frontend: ${{ steps.detect.outputs.frontend }}
       infrastructure: ${{ steps.detect.outputs.infrastructure }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 2
       - name: Detect changed paths
@@ -35,17 +35,17 @@ jobs:
     if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6.0.6
         with:
           version: '11'
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: '25.2.1'
           cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -91,17 +91,17 @@ jobs:
     if: needs.changes.outputs.infrastructure == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6.0.6
         with:
           version: '11'
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: '25.2.1'
           cache: 'pnpm'
-          cache-dependency-path: infrastructure/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
