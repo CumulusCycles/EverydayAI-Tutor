@@ -32,7 +32,7 @@ Detailed rules are in `.claude/rules/`:
 
 ---
 
-## Skills
+## Commands
 
 - `/ship` — lint, build, commit, push, and open a PR in one shot
 - `/done` — after PR is merged: checkout main, pull, delete local feature branch
@@ -45,6 +45,7 @@ Detailed rules are in `.claude/rules/`:
 ## Agents
 
 - **git-agent** (`.claude/agents/git-agent.md`) — specialist for all git and GitHub operations. Invoked by `/ship` and `/done`. Analyzes diffs, generates commit messages, creates PRs, and handles branch cleanup.
+- **python-agent** (`.claude/agents/python-agent.md`) — specialist for Python development. Use for all Lambda functions, Bedrock SDK integration, RAG patterns, and Python utilities. Always uses `uv` for package management.
 
 ---
 
