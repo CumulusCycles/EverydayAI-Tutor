@@ -32,7 +32,7 @@ Detailed rules are in `.claude/rules/`:
 
 ---
 
-## Commands
+## Skills
 
 - `/ship` — lint, build, commit, push, and open a PR in one shot
 - `/done` — after PR is merged: checkout main, pull, delete local feature branch
