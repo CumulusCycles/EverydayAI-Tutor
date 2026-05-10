@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import ContentCard from '../components/ContentCard'
 import { videos } from '../data/videos'
 import { posts } from '../data/posts'
@@ -29,8 +28,8 @@ const learnItems = [
 ]
 
 export default function HomePage() {
-  const latestVideos = videos.slice(0, 3)
-  const latestPosts = posts.slice(0, 3)
+  const latestVideos = videos.slice(0, 1)
+  const latestPosts = posts.slice(0, 1)
 
   return (
     <>
@@ -99,13 +98,8 @@ export default function HomePage() {
       {/* ── LATEST VIDEOS ── */}
       <section className="py-16 px-6 md:px-12 bg-brand-white">
         <div className="max-w-[1200px] mx-auto">
-          <div className="flex items-baseline justify-between mb-8">
-            <h2 className="text-[28px] font-extrabold text-brand-navy">Latest Videos</h2>
-            <Link to="/videos" className="text-sm font-semibold text-brand-orange hover:underline">
-              View all videos →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h2 className="text-[28px] font-extrabold text-brand-navy mb-8">Latest Videos</h2>
+          <div className="max-w-sm">
             {latestVideos.map((video) => (
               <ContentCard
                 key={video.id}
@@ -124,13 +118,8 @@ export default function HomePage() {
       {/* ── LATEST BLOG POSTS ── */}
       <section className="py-16 px-6 md:px-12 bg-white">
         <div className="max-w-[1200px] mx-auto">
-          <div className="flex items-baseline justify-between mb-8">
-            <h2 className="text-[28px] font-extrabold text-brand-navy">Latest Posts</h2>
-            <Link to="/blog" className="text-sm font-semibold text-brand-orange hover:underline">
-              View all posts →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h2 className="text-[28px] font-extrabold text-brand-navy mb-8">Latest Posts</h2>
+          <div className="max-w-sm">
             {latestPosts.map((post) => (
               <ContentCard
                 key={post.id}
@@ -139,7 +128,7 @@ export default function HomePage() {
                 publishDate={post.publishDate}
                 thumbnailUrl={post.thumbnailUrl}
                 linkUrl={post.postUrl}
-                linkText="Read post"
+                linkText="Subscribe on YouTube"
               />
             ))}
           </div>

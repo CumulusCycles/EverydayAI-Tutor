@@ -8,6 +8,7 @@ const navLinks = [
   { to: '/videos', label: 'Videos', end: false },
   { to: '/blog', label: 'Blog', end: false },
   { to: '/about', label: 'About', end: false },
+  { to: '/built-with', label: 'Built with AI', end: false },
 ]
 
 function linkClass(isActive: boolean): string {

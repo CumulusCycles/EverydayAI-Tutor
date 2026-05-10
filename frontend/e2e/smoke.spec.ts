@@ -36,4 +36,22 @@ test.describe('Smoke — all routes load without errors', () => {
     await expect(page.getByRole('heading', { name: '404' })).toBeVisible()
     await expect(page.getByRole('link', { name: /Back to home/i })).toBeVisible()
   })
+
+  test('/built-with loads without errors and shows correct heading', async ({ page }) => {
+    await page.goto('/built-with')
+    await expect(
+      page.getByRole('heading', { name: /Built with Claude Code/i, level: 1 }),
+    ).toBeVisible()
+  })
+})
+
+test.describe('"Built with AI" nav link present on all pages', () => {
+  const routes = ['/', '/videos', '/blog', '/about', '/built-with', '/privacy']
+
+  for (const route of routes) {
+    test(`${route} shows "Built with AI" nav link`, async ({ page }) => {
+      await page.goto(route)
+      await expect(page.getByRole('link', { name: 'Built with AI' }).first()).toBeVisible()
+    })
+  }
 })

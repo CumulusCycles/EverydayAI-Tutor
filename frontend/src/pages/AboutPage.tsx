@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const YT_URL = 'https://www.youtube.com/@EverydayAITutor'
 
 const contentPillars = [
@@ -113,19 +115,65 @@ export default function AboutPage() {
           <div className="max-w-2xl">
             <h2 className="text-[28px] font-extrabold text-brand-navy mb-6">The Host</h2>
             <p className="text-brand-charcoal leading-relaxed mb-4">
-              Hi, I'm the creator behind EverydayAI Tutor. I've spent years working with technology
-              and watching AI go from a research curiosity to a tool that anyone can use — if they
-              know how.
+              I'm{' '}
+              <a
+                href="https://www.linkedin.com/in/robertmfrenette"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-orange font-semibold hover:underline"
+              >
+                Rob Frenette
+              </a>{' '}
+              — a full-stack developer, cloud engineer, and educator with a passion for making
+              complex technology accessible to everyday people.
             </p>
             <p className="text-brand-charcoal leading-relaxed mb-4">
-              I started this channel because I kept seeing the same pattern: incredibly capable AI
-              tools, and people who felt too intimidated to try them. I wanted to fix that. Not with
-              hype or jargon, but with clear, honest, practical teaching.
+              By day I design and build full-stack applications, deployed on AWS cloud
+              infrastructure. By night I build things like this — because I believe the best way to
+              learn something deeply is to teach it clearly.
+            </p>
+            <p className="text-brand-charcoal leading-relaxed mb-4">
+              As an AWS Community Builder in AI Engineering, I stay at the edge of what's possible
+              with cloud and AI. I also run{' '}
+              <a
+                href="https://www.youtube.com/@CumulusCycles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-orange font-semibold hover:underline"
+              >
+                Cumulus Cycles
+              </a>{' '}
+              — a YouTube channel covering AWS cloud development and AI engineering tutorials for
+              developers.
+            </p>
+            <p className="text-brand-charcoal leading-relaxed mb-4">
+              EverydayAI Tutor was born from a simple observation: AI is transforming how we work
+              and live, but most of the educational content out there assumes you're already
+              technical. I built this channel for everyone else.
             </p>
             <p className="text-brand-charcoal leading-relaxed">
-              My goal is simple: help you go from "I've heard of AI" to "I use AI every day and it's
-              genuinely changed how I work." One video at a time.
+              No jargon. No hype. Just honest, practical guidance — from someone who builds with
+              these tools every day.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Built with Claude Code blurb */}
+      <section className="py-16 px-6 md:px-12 bg-brand-beige">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-2xl">
+            <h2 className="text-[28px] font-extrabold text-brand-navy mb-6">Built with AI</h2>
+            <p className="text-brand-charcoal leading-relaxed mb-6">
+              This site was built entirely using Claude Code — Anthropic's agentic AI coding tool —
+              without a human developer writing a single line of code directly.
+            </p>
+            <Link
+              to="/built-with"
+              className="inline-flex items-center gap-1.5 text-brand-orange font-semibold hover:underline"
+            >
+              Learn how it was built →
+            </Link>
           </div>
         </div>
       </section>

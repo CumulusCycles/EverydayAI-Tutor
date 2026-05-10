@@ -3,7 +3,12 @@ import { posts } from '../data/posts'
 import type { BlogPost } from '../types/content'
 
 function sortPosts(items: BlogPost[]): BlogPost[] {
-  return [...items].sort((a, b) => b.publishDate.localeCompare(a.publishDate))
+  return [...items].sort((a, b) => {
+    if (!a.publishDate && !b.publishDate) return 0
+    if (!a.publishDate) return 1
+    if (!b.publishDate) return -1
+    return b.publishDate.localeCompare(a.publishDate)
+  })
 }
 
 export default function BlogPage() {

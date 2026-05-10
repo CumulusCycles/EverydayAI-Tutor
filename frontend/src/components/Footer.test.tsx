@@ -44,4 +44,36 @@ describe('Footer', () => {
     const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' })
     expect(privacyLink).toHaveAttribute('href', '/privacy')
   })
+
+  it('"Built with Claude Code" link points to /built-with as an internal link', () => {
+    renderFooter()
+    const link = screen.getByRole('link', { name: /Built with Claude Code/i })
+    expect(link).toHaveAttribute('href', '/built-with')
+    expect(link).not.toHaveAttribute('target')
+    expect(link).not.toHaveAttribute('rel')
+  })
+
+  it('"Built with Claude Code" link includes the Anthropic asterisk SVG', () => {
+    renderFooter()
+    const link = screen.getByRole('link', { name: /Built with Claude Code/i })
+    const svg = link.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+    expect(svg).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('"View Source on GitHub" link has correct href and opens in a new tab', () => {
+    renderFooter()
+    const link = screen.getByRole('link', { name: /View Source on GitHub/i })
+    expect(link).toHaveAttribute('href', 'https://github.com/CumulusCycles/EverydayAI-Tutor')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('"View Source on GitHub" link includes the GitHub mark SVG', () => {
+    renderFooter()
+    const link = screen.getByRole('link', { name: /View Source on GitHub/i })
+    const svg = link.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+    expect(svg).toHaveAttribute('aria-hidden', 'true')
+  })
 })
