@@ -193,7 +193,7 @@ Claude Code is configured via `.claude/` at the repo root:
 |---|---|
 | `CLAUDE.md` | Project-level guidance for Claude Code |
 | `.claude/rules/` | Detailed rules — frontend, infrastructure, workflow, testing, project |
-| `.claude/commands/` | Slash commands — `/pr`, `/commit`, `/test`, `/lint`, `/build` |
+| `.claude/skills/` | Slash commands — `/pr`, `/commit`, `/test`, `/lint`, `/build` |
 | `.claude/settings.json` | MCP server configuration (Context7 + AWS IaC) |
 
 ### Launch Claude Code
