@@ -32,24 +32,18 @@ docs/update-site-structure
 infra/cloudfront-distribution
 ```
 
-## Commits
+## Shipping Work
 
-- Keep commits small and focused — one logical change per commit
-- Write clear, descriptive commit messages in imperative mood:
-  - ✅ `add hero section to homepage`
-  - ✅ `fix thumbnail crop on video cards`
-  - ❌ `changes`
-  - ❌ `WIP`
+Use the `/ship` command to lint, build, commit, push, and open a PR in one shot:
 
-## Pull Requests
+```
+/ship
+```
 
-- Open a PR for every feature branch before merging to `main`
-- PR title should match the branch description
-- Summarize what changed, why, and how it was verified
-- Do not merge your own PRs — wait for review
+After your PR is reviewed and merged, use `/done` to clean up:
 
-## GitHub Access
+```
+/done
+```
 
-Claude Code uses a Fine-Grained PAT stored in `.env` as `GITHUB_TOKEN`.
-This token has permissions to create branches, push, and open PRs.
-Never expose or commit this token.
+The git-agent (`.claude/agents/git-agent.md`) handles all git and GitHub operations for both commands.
