@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import ChatWidget from './components/ChatWidget'
 import Navbar from './components/Navbar'
 import ScrollToTop from './components/ScrollToTop'
 import Footer from './components/Footer'
@@ -26,6 +27,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   )
 }

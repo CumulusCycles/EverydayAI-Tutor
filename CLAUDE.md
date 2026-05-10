@@ -6,6 +6,11 @@ Global behavior is defined in the global `CLAUDE.md`.
 
 ---
 
+## Security
+- Never read `.env` files or any files containing secrets
+
+---
+
 ## Project Rules
 
 Detailed rules are in `.claude/rules/`:
