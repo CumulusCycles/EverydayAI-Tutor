@@ -42,28 +42,50 @@ claude --version
 - All infrastructure deploys to `us-east-1`
 
 ### AWS CLI Configuration (Local Development Only)
-For local development, configure the AWS CLI with a scoped IAM user — not your root account.
+For local development, configure the AWS CLI with a scoped IAM user — not your root account, and never with AdministratorAccess.
 
-**Create a local dev IAM user:**
-1. Go to AWS Console → IAM → Users → Create User
-2. Name it something like `everydayai-tutor-local-dev`
-3. Go to IAM → Policies → Create Policy
-4. Switch to JSON editor and paste the contents of `docs/tech/iam-policy-local-dev.json`
-5. Name the policy `EverydayAITutorLocalDevPolicy`
-6. Attach the policy to your IAM user
-7. Go to the user → Security Credentials → Create Access Key
-8. Select **Local code** as the use case
-9. Copy the Access Key ID and Secret Access Key
+**Step 1 — Create the IAM Policy:**
+1. Go to AWS Console → IAM → Policies → Create Policy
+2. Click the **JSON** tab
+3. Paste the full contents of `docs/tech/iam-policy-local-dev.json`
+4. Click **Next**
+5. Name it `EverydayAITutorLocalDevPolicy`
+6. Click **Create policy**
 
+**Step 2 — Create the IAM User:**
+1. Go to AWS Console → IAM → Users → Create user
+2. Username: `everydayai-tutor-local-dev`
+3. **Do NOT check** "Provide user access to the AWS Management Console" — programmatic access only
+4. Click **Next**
+5. Select **Attach policies directly**
+6. Search for and select `EverydayAITutorLocalDevPolicy`
+7. Click **Next** → **Create user**
+
+**Step 3 — Create Access Key:**
+1. Click on the user `everydayai-tutor-local-dev`
+2. Go to **Security credentials** tab
+3. Under **Access keys** → Click **Create access key**
+4. Select **Local code**
+5. Click **Next** → **Create access key**
+6. **Copy and save both values immediately** — the Secret Access Key is only shown once
+7. Click **Done**
+
+**Step 4 — Configure AWS CLI:**
 ```bash
 aws configure
 ```
-Enter your Access Key ID, Secret Access Key, and default region (`us-east-1`).
+Enter when prompted:
+- `AWS Access Key ID`: your access key ID
+- `AWS Secret Access Key`: your secret access key
+- `Default region name`: `us-east-1`
+- `Default output format`: `json`
 
-Verify:
+**Step 5 — Verify:**
 ```bash
 aws sts get-caller-identity
 ```
+
+⚠️ Rotate this access key every 90 days. Delete it when not actively deploying.
 
 ### CDK Bootstrap
 CDK must be bootstrapped in `us-east-1` before the first deploy. This is a one-time operation per AWS account/region:
