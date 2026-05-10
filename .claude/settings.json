@@ -1,4 +1,17 @@
 {
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/post-edit-format.sh"
+          }
+        ]
+      }
+    ]
+  },
   "mcpServers": {
     "context7": {
       "command": "npx",
