@@ -1,5 +1,5 @@
 packages:
   - frontend
   - infrastructure
-onlyBuiltDependencies:
-  - esbuild
+allowBuilds:
+  esbuild: true
