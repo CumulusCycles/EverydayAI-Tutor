@@ -122,6 +122,9 @@ jobs:
       - name: Deploy CDK stack
         run: pnpm exec cdk deploy --all --require-approval never
         working-directory: infrastructure
+        env:
+          KB_ID: ${{ secrets.BEDROCK_KB_ID }}
+          KB_BUCKET_NAME: ${{ secrets.KB_BUCKET_NAME }}
 
   knowledge-base:
     name: Sync Knowledge Base
