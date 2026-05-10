@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-brand-gray">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 h-[68px] flex items-center justify-between">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-12 h-[68px] flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <img
@@ -36,7 +36,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <ul className="hidden md:flex items-center gap-9 list-none">
+        <ul className="hidden lg:flex items-center gap-9 list-none">
           {navLinks.map(({ to, label, end }) => (
             <li key={to}>
               <NavLink to={to} end={end} className={({ isActive }) => linkClass(isActive)}>
@@ -61,7 +61,7 @@ export default function Navbar() {
           <button
             onClick={() => setMobileOpen((prev) => !prev)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            className="md:hidden flex flex-col justify-center gap-1.5 p-1"
+            className="lg:hidden flex flex-col justify-center gap-1.5 p-1"
           >
             <span className="block w-5 h-0.5 bg-brand-navy rounded-full" />
             <span className="block w-5 h-0.5 bg-brand-navy rounded-full" />
@@ -72,7 +72,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-brand-gray px-6 py-4">
+        <div className="lg:hidden bg-white border-t border-brand-gray px-6 py-4">
           <ul className="flex flex-col gap-4 list-none">
             {navLinks.map(({ to, label, end }) => (
               <li key={to}>
