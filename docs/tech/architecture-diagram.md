@@ -37,7 +37,7 @@ flowchart TD
 
 ---
 
-## 2. CI/CD Pipeline
+## 3. CI/CD Pipeline
 
 GitHub Actions workflow triggered on push to `main`.
 
@@ -46,21 +46,28 @@ flowchart LR
     A([Push to main]) --> B{Path Filter}
     B -->|/frontend changed| C[pnpm install]
     C --> D[pnpm build]
-    D --> E[Sync /dist\nto S3]
-    E --> F[CloudFront\nCache Invalidation]
-    B -->|/infrastructure changed| G[cdk deploy]
+    D --> E[OIDC Auth\nAssume GitHubActionsDeployRole]
+    E --> F[Sync /dist\nto S3]
+    F --> G[CloudFront\nCache Invalidation]
+    B -->|/infrastructure changed| H[OIDC Auth\nAssume GitHubActionsDeployRole]
+    H --> I[cdk deploy]
 
     style A fill:#F97316,color:#fff
     style B fill:#0F172A,color:#fff
     style C fill:#5B6EF5,color:#fff
     style D fill:#5B6EF5,color:#fff
-    style E fill:#5B6EF5,color:#fff
+    style E fill:#22C55E,color:#fff
     style F fill:#5B6EF5,color:#fff
     style G fill:#5B6EF5,color:#fff
+    style H fill:#22C55E,color:#fff
+    style I fill:#5B6EF5,color:#fff
 ```
 
 ### Notes
 - Frontend and infrastructure jobs run independently via path filtering
+- **Authentication:** OIDC — GitHub Actions assumes `GitHubActionsDeployRole` via `aws-actions/configure-aws-credentials`
+- **No AWS credentials stored in GitHub** — OIDC issues temporary credentials per run
+- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only
 - Cache invalidation uses `/*` — counts as 1 path (first 1,000/month free)
 - No staging environment at launch — deploys directly to production
 - Claude Code creates feature branches, pushes, and opens PRs for review before merging to `main`

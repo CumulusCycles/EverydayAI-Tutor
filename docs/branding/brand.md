@@ -177,4 +177,4 @@ A viewer who finds EverydayAI Tutor should feel:
 | Channel logo (circular) | `./images/yt-channel-logo.png` |
 | Channel banner | `./images/yt-channel-banner.png` |
 | Playlist thumbnail | `./images/yt-channel-video-thumbnail.png` |
-| Favicon | `../../../img/logo.ico` |
+| Favicon | `./images/favicon.ico` |

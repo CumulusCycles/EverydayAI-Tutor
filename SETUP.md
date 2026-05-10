@@ -25,6 +25,7 @@ Ensure the following are installed on your machine before proceeding.
 node --version
 npm --version
 pnpm --version
+uv --version
 git --version
 gh --version
 aws --version
@@ -39,16 +40,46 @@ claude --version
 ### AWS Account
 - An AWS account is required
 - All infrastructure deploys to `us-east-1`
-- CDK must be bootstrapped in `us-east-1`:
-  ```bash
-  cdk bootstrap aws://ACCOUNT_ID/us-east-1
-  ```
 
-### AWS CLI Configuration
+### AWS CLI Configuration (Local Development Only)
+For local development, configure the AWS CLI with credentials that have sufficient permissions to run `cdk diff` and `cdk deploy` manually.
+
 ```bash
 aws configure
 ```
-Enter your AWS Access Key ID, Secret Access Key, and default region (`us-east-1`).
+
+Verify:
+```bash
+aws sts get-caller-identity
+```
+
+### CDK Bootstrap
+CDK must be bootstrapped in `us-east-1` before the first deploy. This is a one-time operation per AWS account/region:
+
+```bash
+cdk bootstrap aws://ACCOUNT_ID/us-east-1
+```
+
+### GitHub Actions — OIDC Authentication (No Credentials Required)
+This project uses **OpenID Connect (OIDC)** for GitHub Actions to authenticate with AWS. No AWS Access Keys or Secrets are stored in GitHub — ever.
+
+OIDC is configured directly in the CDK stack (`infrastructure/lib/stack.ts`). On first CDK deploy, it creates:
+- An IAM OIDC Identity Provider for GitHub Actions
+- An IAM Role (`GitHubActionsDeployRole`) that GitHub Actions assumes per-run
+- A trust policy scoped to only this repository and `main` branch
+
+The GitHub Actions role policy is documented in `docs/tech/iam-policy.json`.
+
+After the first CDK deploy, add these two secrets to GitHub:
+
+Go to repo → Settings → Secrets and variables → Actions → New repository secret:
+
+| Secret | Value |
+|---|---|
+| `AWS_ROLE_ARN` | ARN of `GitHubActionsDeployRole` — available after first CDK deploy |
+| `AWS_REGION` | `us-east-1` |
+
+⚠️ Never store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in GitHub secrets — use OIDC instead.
 
 ---
 
@@ -129,7 +160,7 @@ Claude Code is configured via `.claude/` at the repo root:
 | `CLAUDE.md` | Project-level guidance for Claude Code |
 | `.claude/rules/` | Detailed rules — frontend, infrastructure, workflow, testing, project |
 | `.claude/commands/` | Slash commands — `/pr`, `/commit`, `/test`, `/lint`, `/build` |
-| `.claude/settings.json` | MCP server configuration (Context7) |
+| `.claude/settings.json` | MCP server configuration (Context7 + AWS IaC) |
 
 ### Launch Claude Code
 ```bash

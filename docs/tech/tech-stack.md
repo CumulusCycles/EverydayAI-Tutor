@@ -32,7 +32,7 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 | Framework | React | Static site, no SSR required |
 | Build Tool | Vite | Fast builds, outputs to `/dist` |
 | Language | TypeScript | Consistent with CDK infrastructure |
-| Styling | Tailwind CSS v4 | Uses @theme block in CSS — no tailwind.config.ts |
+| Styling | Tailwind CSS | Utility-first, consistent with modern React patterns |
 | Routing | React Router | Client-side routing with clean URLs |
 | Package Manager | pnpm | Faster and more efficient than npm/yarn |
 | Node Version | v25.2.1 | Homebrew-managed; pinned in GHA workflow to match dev machine |
@@ -86,10 +86,12 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 - Counts as 1 path — first 1,000 invalidation paths per month are free
 
 
-### IAM
-- A scoped IAM policy is provided in `docs/tech/iam-policy.json`
-- Attach this policy to your IAM user instead of `AdministratorAccess`
-- Policy covers: CloudFormation, S3, CloudFront, ACM, Route 53, SSM, IAM (CDK bootstrap), STS, ECR (CDK bootstrap)
+### IAM & Authentication
+- GitHub Actions authenticates with AWS via **OpenID Connect (OIDC)** — no long-lived credentials stored anywhere
+- OIDC provider and `GitHubActionsDeployRole` are provisioned in the CDK stack
+- GitHub Actions assumes the role per-run via `aws-actions/configure-aws-credentials`
+- Role policy is documented in `docs/tech/iam-policy.json` — grants permission to assume CDK bootstrap roles only
+- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only — never `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY`
 
 ### CDK Bootstrap
 AWS account is already bootstrapped in `us-east-1` via existing `CDKToolkit` CloudFormation stack.
@@ -128,9 +130,12 @@ Claude Code uses a Fine-Grained Personal Access Token (PAT) to create feature br
 
 
 
+## CI/CD
+
 | Tool | GitHub Actions |
 |---|---|
 | Trigger | Push to `main` branch |
+| Authentication | OIDC — GitHub Actions assumes `GitHubActionsDeployRole` via `aws-actions/configure-aws-credentials` |
 | Frontend job | `pnpm install` → `pnpm build` → sync `/dist` to S3 → CloudFront cache invalidation |
 | Infrastructure job | `cdk deploy` (path-filtered — only runs if files in `/infrastructure` changed) |
 | Path filtering | Frontend and infrastructure jobs run independently based on changed paths |
