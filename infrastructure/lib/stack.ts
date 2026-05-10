@@ -7,6 +7,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as targets from 'aws-cdk-lib/aws-route53-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as bedrock from 'aws-cdk-lib/aws-bedrock'
+import * as s3vectors from 'aws-cdk-lib/aws-s3vectors'
 import { Construct } from 'constructs'
 
 const DOMAIN = 'aieverydaytutor.com'
@@ -140,7 +141,22 @@ export class EverydayAiTutorStack extends cdk.Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
     })
 
-    // IAM role that Bedrock assumes to read the KB bucket and invoke embeddings
+    // S3 vector bucket for storing embeddings
+    const vectorBucket = new s3vectors.CfnVectorBucket(this, 'KnowledgeBaseVectorBucket', {
+      vectorBucketName: 'aieverydaytutor-vector-store',
+    })
+
+    // Vector index — Titan Text Embeddings v2 produces 1024-dim float32 vectors
+    const KB_INDEX_NAME = 'aieverydaytutor-kb-index'
+    const vectorIndex = new s3vectors.CfnIndex(this, 'KnowledgeBaseVectorIndex', {
+      vectorBucketArn: vectorBucket.attrVectorBucketArn,
+      indexName: KB_INDEX_NAME,
+      dataType: 'float32',
+      dimension: 1024,
+      distanceMetric: 'cosine',
+    })
+
+    // IAM role that Bedrock assumes to read the KB bucket, invoke embeddings, and read/write vectors
     const kbRole = new iam.Role(this, 'KnowledgeBaseRole', {
       assumedBy: new iam.ServicePrincipal('bedrock.amazonaws.com', {
         conditions: {
@@ -170,7 +186,21 @@ export class EverydayAiTutorStack extends cdk.Stack {
       }),
     )
 
-    // Knowledge Base — Titan Text Embeddings v2, S3 Vectors (Quick Create)
+    kbRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          's3vectors:GetIndex',
+          's3vectors:GetVectors',
+          's3vectors:PutVectors',
+          's3vectors:QueryVectors',
+          's3vectors:DeleteVectors',
+        ],
+        resources: [vectorBucket.attrVectorBucketArn, vectorIndex.attrIndexArn],
+      }),
+    )
+
+    // Knowledge Base — Titan Text Embeddings v2, explicit S3 Vectors storage
     const knowledgeBase = new bedrock.CfnKnowledgeBase(this, 'KnowledgeBase', {
       name: 'aieverydaytutor-knowledge-base',
       roleArn: kbRole.roleArn,
@@ -182,7 +212,11 @@ export class EverydayAiTutorStack extends cdk.Stack {
       },
       storageConfiguration: {
         type: 'S3_VECTORS',
-        s3VectorsConfiguration: {},
+        s3VectorsConfiguration: {
+          vectorBucketArn: vectorBucket.attrVectorBucketArn,
+          indexArn: vectorIndex.attrIndexArn,
+          indexName: KB_INDEX_NAME,
+        },
       },
     })
 
