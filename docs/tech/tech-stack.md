@@ -156,7 +156,6 @@ Claude Code uses a Fine-Grained Personal Access Token (PAT) to create feature br
 The following are intentionally excluded from the initial build but are natural next steps as the site grows:
 
 - User authentication
-- Email capture / newsletter integration
 - Course or membership content
 
 ### Backend & Data Layer
