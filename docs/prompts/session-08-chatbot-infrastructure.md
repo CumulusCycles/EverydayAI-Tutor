@@ -77,6 +77,41 @@ tsc --noEmit exits 0. Everything is clean. Here's a summary of what changed acro
 
 ---
 
+## Prompts
+
+### Prompt 2
+
+> The CDK deployment failed with this error on the Bedrock Knowledge Base resource:
+
+"required key [IndexArn] not found"
+"required key [VectorBucketArn] not found" 
+"required key [IndexName] not found"
+
+The S3 Vectors Quick Create approach doesn't work via CloudFormation. Fix infrastructure/lib/stack.ts to:
+
+1. Create an S3 vector bucket explicitly using aws_s3vectors (or CfnVectorBucket if L2 not available)
+2. Create a vector index on that bucket explicitly
+3. Reference the VectorBucketArn, IndexArn, and IndexName in the KnowledgeBase StorageConfiguration
+
+Use the AWS IaC MCP server to check the correct CDK constructs for S3 Vectors and Bedrock Knowledge Base with S3 Vectors storage configuration.
+
+Run tsc --noEmit when done to verify no TypeScript errors.
+
+### Result
+
+tsc --noEmit exits 0 — clean. Here's what changed in stack.ts:
+
+  Removed: s3VectorsConfiguration: {} (Quick Create — not supported by CloudFormation)
+
+  Added:
+  - CfnVectorBucket (aieverydaytutor-vector-store) — the S3 vector bucket
+  - CfnIndex (aieverydaytutor-kb-index) — float32, 1024 dimensions, cosine distance (correct config for Titan Text Embeddings v2)
+  - Five s3vectors:* permissions on the vector bucket and index added to kbRole
+  - storageConfiguration.s3VectorsConfiguration now passes explicit vectorBucketArn, indexArn, and indexName from the resources above
+
+  Ready to /ship.
+---
+
 ## Notes
 
 - After GHA deploys the CDK stack, manually copy CloudFormation outputs to GitHub secrets:
