@@ -117,6 +117,22 @@ Go to repo → Settings → Secrets and variables → Actions → New repository
 
 ---
 
+## After First Bedrock Infrastructure Deploy
+
+After deploying the CDK stack with the Bedrock Knowledge Base resources for the first time, copy the CloudFormation outputs into GitHub secrets so the Sync Knowledge Base workflow can run.
+
+Go to the AWS Console → CloudFormation → `EverydayAiTutorStack` → Outputs tab, then add the following secrets to GitHub (repo → Settings → Secrets and variables → Actions → New repository secret):
+
+| CloudFormation Output | GitHub Secret | Description |
+|---|---|---|
+| `KBBucketName` | `KB_BUCKET_NAME` | S3 bucket for Knowledge Base markdown content |
+| `KnowledgeBaseId` | `BEDROCK_KB_ID` | Bedrock Knowledge Base ID |
+| `DataSourceId` | `BEDROCK_DS_ID` | Bedrock Data Source ID |
+
+Once these three secrets are in place, any push to `main` that changes files under `knowledge-base/` will automatically sync content to S3 and trigger a Bedrock ingestion job.
+
+---
+
 ## GitHub Setup
 
 ### Fine-Grained Personal Access Token (PAT)

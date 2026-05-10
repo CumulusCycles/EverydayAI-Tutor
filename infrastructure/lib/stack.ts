@@ -6,6 +6,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as targets from 'aws-cdk-lib/aws-route53-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as bedrock from 'aws-cdk-lib/aws-bedrock'
 import { Construct } from 'constructs'
 
 const DOMAIN = 'aieverydaytutor.com'
@@ -128,6 +129,96 @@ export class EverydayAiTutorStack extends cdk.Stack {
       }),
     )
 
+    // ── Bedrock Knowledge Base ────────────────────────────────────────────────
+
+    // Private S3 bucket for Knowledge Base content
+    const kbBucket = new s3.Bucket(this, 'KnowledgeBaseBucket', {
+      bucketName: 'aieverydaytutor-knowledge-base',
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      versioned: true,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+    })
+
+    // IAM role that Bedrock assumes to read the KB bucket and invoke embeddings
+    const kbRole = new iam.Role(this, 'KnowledgeBaseRole', {
+      assumedBy: new iam.ServicePrincipal('bedrock.amazonaws.com', {
+        conditions: {
+          StringEquals: { 'aws:SourceAccount': this.account },
+          ArnLike: {
+            'aws:SourceArn': `arn:aws:bedrock:${this.region}:${this.account}:knowledge-base/*`,
+          },
+        },
+      }),
+    })
+
+    kbRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['s3:GetObject', 's3:ListBucket', 's3:GetBucketLocation'],
+        resources: [kbBucket.bucketArn, `${kbBucket.bucketArn}/*`],
+      }),
+    )
+
+    kbRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+        ],
+      }),
+    )
+
+    // Knowledge Base — Titan Text Embeddings v2, S3 Vectors (Quick Create)
+    const knowledgeBase = new bedrock.CfnKnowledgeBase(this, 'KnowledgeBase', {
+      name: 'aieverydaytutor-knowledge-base',
+      roleArn: kbRole.roleArn,
+      knowledgeBaseConfiguration: {
+        type: 'VECTOR',
+        vectorKnowledgeBaseConfiguration: {
+          embeddingModelArn: `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+        },
+      },
+      storageConfiguration: {
+        type: 'S3_VECTORS',
+        s3VectorsConfiguration: {},
+      },
+    })
+
+    // Data source — KB S3 bucket
+    const dataSource = new bedrock.CfnDataSource(this, 'KnowledgeBaseDataSource', {
+      knowledgeBaseId: knowledgeBase.attrKnowledgeBaseId,
+      name: 'aieverydaytutor-knowledge-base-datasource',
+      dataSourceConfiguration: {
+        type: 'S3',
+        s3Configuration: {
+          bucketArn: kbBucket.bucketArn,
+        },
+      },
+    })
+
+    // Allow GitHub Actions deploy role to sync KB content and trigger ingestion
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'KnowledgeBaseSync',
+        effect: iam.Effect.ALLOW,
+        actions: ['s3:PutObject', 's3:DeleteObject', 's3:ListBucket'],
+        resources: [kbBucket.bucketArn, `${kbBucket.bucketArn}/*`],
+      }),
+    )
+
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'BedrockIngestion',
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:StartIngestionJob', 'bedrock:GetIngestionJob'],
+        resources: ['*'],
+      }),
+    )
+
+    // ── Outputs ───────────────────────────────────────────────────────────────
+
     new cdk.CfnOutput(this, 'DistributionId', {
       value: distribution.distributionId,
     })
@@ -142,6 +233,18 @@ export class EverydayAiTutorStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'GitHubActionsDeployRoleArn', {
       value: deployRole.roleArn,
+    })
+
+    new cdk.CfnOutput(this, 'KBBucketName', {
+      value: kbBucket.bucketName,
+    })
+
+    new cdk.CfnOutput(this, 'KnowledgeBaseId', {
+      value: knowledgeBase.attrKnowledgeBaseId,
+    })
+
+    new cdk.CfnOutput(this, 'DataSourceId', {
+      value: dataSource.attrDataSourceId,
     })
   }
 }
