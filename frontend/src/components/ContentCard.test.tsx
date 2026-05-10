@@ -22,10 +22,19 @@ describe('ContentCard', () => {
     expect(screen.getByText(/May 9, 2026/)).toBeInTheDocument()
   })
 
-  it('shows "Coming soon" when publishDate is empty', () => {
-    // Provide thumbnailUrl so the only "Coming soon" comes from the date
+  it('shows "Coming soon" when publishDate is empty string', () => {
     render(<ContentCard {...baseProps} publishDate="" thumbnailUrl="/thumb.png" />)
     expect(screen.getByText('Coming soon')).toBeInTheDocument()
+  })
+
+  it('shows "Coming soon" when publishDate is undefined', () => {
+    render(<ContentCard {...baseProps} publishDate={undefined} thumbnailUrl="/thumb.png" />)
+    expect(screen.getByText('Coming soon')).toBeInTheDocument()
+  })
+
+  it('does not render external link when linkUrl is empty string', () => {
+    render(<ContentCard {...baseProps} linkUrl="" thumbnailUrl="/thumb.png" />)
+    expect(screen.queryByRole('link', { name: /Watch on YouTube/i })).not.toBeInTheDocument()
   })
 
   it('renders thumbnail image when thumbnailUrl is provided', () => {

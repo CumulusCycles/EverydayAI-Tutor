@@ -1,15 +1,18 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import VideosPage from './pages/VideosPage'
 import BlogPage from './pages/BlogPage'
 import AboutPage from './pages/AboutPage'
+import BuiltWithAIPage from './pages/BuiltWithAIPage'
 import PrivacyPage from './pages/PrivacyPage'
 
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-white text-brand-charcoal">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-1">
         <Routes>
@@ -17,6 +20,7 @@ export default function App() {
           <Route path="/videos" element={<VideosPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/built-with" element={<BuiltWithAIPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -19,12 +19,19 @@ describe('Navbar', () => {
     expect(logoImg.closest('a')).toHaveAttribute('href', '/')
   })
 
-  it('renders all four navigation links', () => {
+  it('renders all five navigation links', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Videos' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Built with AI' })).toBeInTheDocument()
+  })
+
+  it('"Built with AI" nav link points to /built-with', () => {
+    renderNavbar()
+    const link = screen.getByRole('link', { name: 'Built with AI' })
+    expect(link).toHaveAttribute('href', '/built-with')
   })
 
   it('renders subscribe button with correct YouTube URL', () => {
