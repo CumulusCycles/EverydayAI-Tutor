@@ -7,10 +7,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Initialize at module level — reused across Lambda invocations
-bedrock_agent_runtime = boto3.client('bedrock-agent-runtime')
+bedrock_agent_runtime = boto3.client("bedrock-agent-runtime")
 
-KB_ID = os.environ['KB_ID']
-MODEL_ARN = 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0'
+KB_ID = os.environ["KB_ID"]
+MODEL_ARN = "arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-sonnet-4-20250514-v1:0"
 
 SYSTEM_PROMPT = """You are a helpful AI assistant for AIEverydayTutor.com — a website and YouTube channel that teaches practical AI skills to everyday people with no technical background required.
 
@@ -28,18 +28,18 @@ Do not make up information. Do not discuss topics unrelated to EverydayAI Tutor 
 
 
 def process_query(message: str, history: list) -> dict:
-    logger.info(f'Processing query: {message[:100]}')
+    logger.info(f"Processing query: {message[:100]}")
 
     response = bedrock_agent_runtime.retrieve_and_generate(
-        input={'text': message},
+        input={"text": message},
         retrieveAndGenerateConfiguration={
-            'type': 'KNOWLEDGE_BASE',
-            'knowledgeBaseConfiguration': {
-                'knowledgeBaseId': KB_ID,
-                'modelArn': MODEL_ARN,
-                'generationConfiguration': {
-                    'promptTemplate': {
-                        'textPromptTemplate': SYSTEM_PROMPT + '\n\n$search_results$',
+            "type": "KNOWLEDGE_BASE",
+            "knowledgeBaseConfiguration": {
+                "knowledgeBaseId": KB_ID,
+                "modelArn": MODEL_ARN,
+                "generationConfiguration": {
+                    "promptTemplate": {
+                        "textPromptTemplate": SYSTEM_PROMPT + "\n\n$search_results$",
                     },
                 },
             },
@@ -47,6 +47,6 @@ def process_query(message: str, history: list) -> dict:
     )
 
     return {
-        'response': response['output']['text'],
-        'citations': response.get('citations', []),
+        "response": response["output"]["text"],
+        "citations": response.get("citations", []),
     }
