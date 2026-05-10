@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/scripts/post-edit-format.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-format.sh"
           }
         ]
       }

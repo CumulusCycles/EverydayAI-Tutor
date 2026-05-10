@@ -2,10 +2,18 @@
 import 'source-map-support/register'
 import * as cdk from 'aws-cdk-lib'
 import { EverydayAiTutorStack } from '../lib/stack'
+import { ChatbotStack } from '../lib/chatbot-stack'
 
 const app = new cdk.App()
 
 new EverydayAiTutorStack(app, 'EverydayAiTutorStack', {
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: 'us-east-1',
+  },
+})
+
+new ChatbotStack(app, 'ChatbotStack', {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: 'us-east-1',

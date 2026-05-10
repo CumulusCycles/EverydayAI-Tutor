@@ -39,3 +39,4 @@ prompts/
 | 07 | `session-07-knowledge-base-content.md` | `feature/knowledge-base-content` | Initial knowledge base markdown files for Bedrock Knowledge Base |
 | 08 | `session-08-chatbot-infrastructure.md` | `feature/chatbot-infrastructure` | KB S3 bucket, Bedrock Knowledge Base, S3 Vectors CDK infrastructure and GHA workflow updates |
 | 09 | `session-09-hooks.md` | `setup/hooks` | PostToolUse hooks for auto-formatting TS/TSX and Python on every file edit |
+| 10 | `session-10-chatbot-lambda.md` | `feature/chatbot-lambda` | Python Lambda + API Gateway querying Bedrock Knowledge Base with S3 Vectors |
