@@ -58,6 +58,8 @@ jobs:
       - name: Build
         run: pnpm build
         working-directory: frontend
+        env:
+          VITE_CHAT_API_URL: ${{ secrets.VITE_CHAT_API_URL }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5

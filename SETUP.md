@@ -104,7 +104,7 @@ OIDC is configured directly in the CDK stack (`infrastructure/lib/stack.ts`). On
 
 The GitHub Actions role policy is documented in `docs/tech/iam-policy.json`.
 
-After the first CDK deploy, add these two secrets to GitHub:
+After the first CDK deploy, add these secrets to GitHub:
 
 Go to repo → Settings → Secrets and variables → Actions → New repository secret:
 
@@ -112,6 +112,7 @@ Go to repo → Settings → Secrets and variables → Actions → New repository
 |---|---|
 | `AWS_ROLE_ARN` | ARN of `GitHubActionsDeployRole` — available after first CDK deploy |
 | `AWS_REGION` | `us-east-1` |
+| `VITE_CHAT_API_URL` | `ChatApiUrl` from `ChatbotStack` CloudFormation outputs (append `/chat`) — injected at frontend build time |
 
 ⚠️ Never store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in GitHub secrets — use OIDC instead.
 
@@ -130,6 +131,27 @@ Go to the AWS Console → CloudFormation → `EverydayAiTutorStack` → Outputs 
 | `DataSourceId` | `BEDROCK_DS_ID` | Bedrock Data Source ID |
 
 Once these three secrets are in place, any push to `main` that changes files under `knowledge-base/` will automatically sync content to S3 and trigger a Bedrock ingestion job.
+
+---
+
+## Local Frontend Development — Chat Widget
+
+The chat widget requires `VITE_CHAT_API_URL` at Vite build time. Vite reads `.env` from the `frontend/` directory — the repo-root `.env` is not used.
+
+Create `frontend/.env` (gitignored):
+
+```
+VITE_CHAT_API_URL=<ChatApiUrl from ChatbotStack outputs>/chat
+```
+
+Get the value from:
+```bash
+aws cloudformation describe-stacks --stack-name ChatbotStack \
+  --query "Stacks[0].Outputs[?OutputKey=='ChatApiUrl'].OutputValue" \
+  --output text
+```
+
+Append `/chat` to the returned URL.
 
 ---
 
