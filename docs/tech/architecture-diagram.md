@@ -37,7 +37,7 @@ flowchart TD
 
 ---
 
-## 3. CI/CD Pipeline
+## 2. CI/CD Pipeline
 
 GitHub Actions workflow triggered on push to `main`.
 
@@ -49,7 +49,7 @@ flowchart LR
     D --> E[OIDC Auth\nAssume GitHubActionsDeployRole]
     E --> F[Sync /dist\nto S3]
     F --> G[CloudFront\nCache Invalidation]
-    B -->|/infrastructure changed| H[OIDC Auth\nAssume GitHubActionsDeployRole]
+    B -->|/infrastructure or\n/chatbot changed| H[OIDC Auth\nAssume GitHubActionsDeployRole]
     H --> I[cdk deploy]
 
     style A fill:#F97316,color:#fff
@@ -74,9 +74,9 @@ flowchart LR
 
 ---
 
-## 3. Future Architecture — Full Stack
+## 3. Current Architecture — Full Stack
 
-Full system architecture including backend, data layer, and agentic search.
+Full system architecture including the chatbot backend and knowledge base.
 
 ```mermaid
 flowchart TD
@@ -195,4 +195,4 @@ flowchart LR
 - DynamoDB is the **source of truth** — Bedrock indexes a copy of the content
 - All Lambdas written in **Python**
 - Vector store: S3 Vectors — implemented and deployed
-- Agentic search is a **future enhancement** — out of scope at launch
+- Chatbot is live — powered by **AWS Bedrock Knowledge Base** with **S3 Vectors**
