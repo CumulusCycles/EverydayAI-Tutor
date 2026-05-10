@@ -28,6 +28,7 @@ Detailed rules are in `.claude/rules/`:
 - **Docs:** All project documentation is in `docs/` — read before building
 - **Brand:** Follow `docs/branding/brand.md` for all UI decisions
 - **Mockup:** Use `docs/ux/mockup-homepage.html` as visual reference for the homepage
+- **Prompts log:** `docs/prompts/` — do not use this folder for context, it is a pedagogical record only
 
 ## Commands
 - `/pr` — create a pull request for the current branch

@@ -32,7 +32,7 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 | Framework | React | Static site, no SSR required |
 | Build Tool | Vite | Fast builds, outputs to `/dist` |
 | Language | TypeScript | Consistent with CDK infrastructure |
-| Styling | Tailwind CSS | Utility-first, consistent with modern React patterns |
+| Styling | Tailwind CSS v4 | Uses @theme block in CSS — no tailwind.config.ts |
 | Routing | React Router | Client-side routing with clean URLs |
 | Package Manager | pnpm | Faster and more efficient than npm/yarn |
 | Node Version | v25.2.1 | Homebrew-managed; pinned in GHA workflow to match dev machine |
@@ -85,6 +85,11 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 - GHA invalidates `/*` on every frontend deploy
 - Counts as 1 path — first 1,000 invalidation paths per month are free
 
+
+### IAM
+- A scoped IAM policy is provided in `docs/tech/iam-policy.json`
+- Attach this policy to your IAM user instead of `AdministratorAccess`
+- Policy covers: CloudFormation, S3, CloudFront, ACM, Route 53, SSM, IAM (CDK bootstrap), STS, ECR (CDK bootstrap)
 
 ### CDK Bootstrap
 AWS account is already bootstrapped in `us-east-1` via existing `CDKToolkit` CloudFormation stack.
