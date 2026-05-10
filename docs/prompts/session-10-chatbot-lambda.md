@@ -65,5 +65,15 @@ Everything looks correct. Here's what was built across 6 files, all checks passi
 
 ---
 
+### Prompt 2
+
+> The CDK deploy GitHub Actions job is failing because there are now two stacks (EverydayAiTutorStack and ChatbotStack). Update the deploy command in .github/workflows/deploy.yml to use `pnpm exec cdk deploy --all --require-approval never` instead of `pnpm exec cdk deploy --require-approval never`.
+
+### Result
+
+ Done. Ready to /ship.
+
+---
+
 ## Notes
 
