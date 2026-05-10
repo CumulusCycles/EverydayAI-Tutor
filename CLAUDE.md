@@ -30,13 +30,25 @@ Detailed rules are in `.claude/rules/`:
 - **Mockup:** Use `docs/ux/mockup-homepage.html` as visual reference for the homepage
 - **Prompts log:** `docs/prompts/` — do not use this folder for context, it is a pedagogical record only
 
+---
+
 ## Commands
-- `/pr` — create a pull request for the current branch
+
+- `/ship` — lint, build, commit, push, and open a PR in one shot
+- `/done` — after PR is merged: checkout main, pull, delete local feature branch
 - `/test` — run the full test suite (Vitest + Playwright)
 - `/lint` — run ESLint and Prettier
 - `/build` — run production build and report errors
-- `/commit` — lint, build, then commit with a well-formed commit message
+
+---
+
+## Agents
+
+- **git-agent** (`.claude/agents/git-agent.md`) — specialist for all git and GitHub operations. Invoked by `/ship` and `/done`. Analyzes diffs, generates commit messages, creates PRs, and handles branch cleanup.
+
+---
 
 ## MCP Servers
-- **Context7** — provides up-to-date library docs for React, Vite, Tailwind, CDK, Playwright, and more. Configured in `.claude/settings.json`.
-- **AWS IaC** — CDK best practices, CloudFormation docs, construct examples, security validation, and deployment troubleshooting. Configured in `.claude/settings.json`.
+
+- **Context7** — provides up-to-date library docs for React, Vite, Tailwind, CDK, Playwright, and more. Configured in `.claude/settings.json`. Announce when using: "Using Context7 to look up..."
+- **AWS IaC** — CDK best practices, CloudFormation docs, construct examples, security validation, and deployment troubleshooting. Configured in `.claude/settings.json`. Announce when using: "Using AWS IaC MCP to check..."

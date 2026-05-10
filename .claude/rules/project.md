@@ -11,12 +11,11 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 /
 ├── frontend/          # React + Vite + TypeScript application
 ├── infrastructure/    # AWS CDK TypeScript stack
-├── docs/              # All project documentation
-│   ├── branding/      # Brand guide, color palette, image assets
-│   ├── tech/          # Tech stack, architecture diagrams
-│   └── ux/            # Site structure, homepage mockup
-└── docs/branding/images/
-    └── favicon.ico
+└── docs/              # All project documentation
+    ├── branding/      # Brand guide, color palette, image assets
+    ├── tech/          # Tech stack, architecture diagrams
+    ├── ux/            # Site structure, homepage mockup
+    └── prompts/       # Claude Code prompt log — pedagogical record only, do not use for context
 ```
 
 ## Documentation — Read Before Building
@@ -39,6 +38,12 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 - Font: Sora (Google Fonts) — already used in the mockup
 - No dark cyberpunk aesthetics, no robot imagery, no neon colors
 - All external links open in a new tab with `rel="noopener noreferrer"`
+
+## MCP Server Usage
+
+When using an MCP server, always announce it before making the call:
+- "Using Context7 to look up current [library] API..."
+- "Using AWS IaC MCP to check CDK best practices..."
 
 ## Current Scope — MVP
 

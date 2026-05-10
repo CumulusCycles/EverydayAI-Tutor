@@ -185,16 +185,6 @@ cdk diff
 
 ---
 
-### GitHub Actions Requirements
-- All GitHub Actions must use Node.js 24+ compatible versions
-- Current pinned versions:
-  - `actions/checkout@v6.0.2`
-  - `actions/setup-node@v6.4.0`
-  - `pnpm/action-setup@v6.0.6`
-- Node.js 20 runners are deprecated — forced to Node.js 24 by June 2nd, 2026, removed September 16th, 2026
-
----
-
 ## Claude Code Setup
 
 Claude Code is configured via `.claude/` at the repo root:
@@ -220,8 +210,15 @@ Never commit directly to `main`. Always:
 ```bash
 git checkout -b feature/your-feature-name
 # make changes
-/commit
-/pr
+/ship
 ```
+
+After your PR is reviewed and merged:
+
+```bash
+/done
+```
+
+The git-agent handles commit message generation, pushing, PR creation, and branch cleanup automatically.
 
 See `.claude/rules/workflow.md` for full branching conventions.
