@@ -47,13 +47,25 @@ GitHub Actions frontend deploy failing with `[ERR_PNPM_IGNORED_BUILDS] Ignored b
 
 ### Result
 
-Two files changed:
 
-  pnpm-workspace.yaml — replaced onlyBuiltDependencies (pnpm ≤10 syntax) with allowBuilds (pnpm 11 syntax). The old key was silently ignored by pnpm 11, leaving strictDepBuilds: 
-  true (the new default) blocking esbuild's postinstall on every clean CI install.
 
-  .npmrc — removed allow-build=esbuild, which was never a valid pnpm config key.
+---
 
-  The workflow itself (deploy.yml) needed no changes — the install command and flags were correct. The failure was entirely in the config files. pnpm install exits clean locally
-  with the new config; CI will now find allowBuilds: esbuild: true, permit the postinstall script, and proceed.
+## Fix 03 — Add workflow_dispatch to deploy.yml
 
+**Branch:** `fix/add-workflow-dispatch`
+
+### Problem
+No "Run workflow" button in GitHub Actions UI — deploy.yml is missing `workflow_dispatch` trigger, preventing manual workflow runs.
+
+### Prompt 1
+
+> Add workflow_dispatch trigger to .github/workflows/deploy.yml so the workflow can be manually triggered from the GitHub Actions UI. Keep the existing push trigger. No other changes.
+
+### Result
+
+Done. workflow_dispatch: added — the workflow can now be triggered manually from the GitHub Actions UI in addition to push-to-main. Note that a manual trigger bypasses the
+  paths filter, so both jobs will run their changes detection step; if no relevant files changed since the last commit, the frontend and infrastructure jobs will still evaluate
+  correctly via the git diff HEAD^ HEAD check.
+  
+---
