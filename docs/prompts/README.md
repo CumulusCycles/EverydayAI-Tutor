@@ -26,6 +26,14 @@ prompts/
 
 ## Sessions
 
+## Sessions
+
 | Session | File | Branch | Description |
 |---|---|---|---|
 | 01 | `session-01-project-scaffold.md` | `feature/project-scaffold` | Initial monorepo scaffold — frontend and infrastructure setup |
+| 02 | `session-02-homepage.md` | `feature/homepage` | Homepage, Navbar, Footer, ContentCard, static data files |
+| 03 | `session-03-pages.md` | `feature/pages` | Videos, Blog, About, and Privacy pages |
+| 04 | `session-04-tests.md` | `feature/tests` | Unit tests for components and E2E smoke tests for all routes |
+| 05 | `session-05-ci-cd.md` | `feature/ci-cd` | GitHub Actions workflow for frontend deploy and CDK deploy |
+| 06 | `session-06-fixes.md` | various | Bug fixes and workflow corrections |
+| 07 | `session-07-knowledge-base-content.md` | `feature/knowledge-base-content` | Initial knowledge base markdown files for Bedrock Knowledge Base |

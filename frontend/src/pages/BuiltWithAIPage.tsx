@@ -165,6 +165,25 @@ export default function BuiltWithAIPage() {
         </div>
       </section>
 
+      {/* Coming Soon: AI Chat */}
+      <section className="py-16 px-6 md:px-12 bg-brand-beige">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-2xl">
+            <span className="inline-block bg-[#fff0e6] text-brand-orange text-[13px] font-bold px-3.5 py-1.5 rounded-full mb-5 uppercase tracking-wide">
+              Coming Soon
+            </span>
+            <h2 className="text-[28px] font-extrabold text-brand-navy mb-4">
+              Coming Soon: AI-Powered Chat
+            </h2>
+            <p className="text-brand-charcoal leading-relaxed">
+              We're adding an AI chatbot powered by AWS Bedrock Knowledge Base and S3 Vectors. Ask
+              plain English questions about the site, the channel, and the content — and get
+              grounded, accurate answers.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Banner */}
       <div className="bg-brand-navy py-16 px-6 text-center">
         <div className="max-w-[640px] mx-auto">

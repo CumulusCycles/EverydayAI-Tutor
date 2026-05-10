@@ -169,7 +169,7 @@ See `agentic-search-flow.md` for architecture diagram.
 - **DynamoDB Streams** — triggers on new/updated content
 - **Lambda (Python)** — syncs new/updated content to Bedrock Knowledge Base
 - **AWS Bedrock Knowledge Base** — semantic search index (vector embeddings)
-- **S3 or OpenSearch Serverless** — vector store
+- **S3 Vectors** — vector store (serverless, pay-per-use, up to 90% cheaper than specialized vector databases)
 - **Lambda (Python)** — handles search queries, calls Bedrock Knowledge Base, returns results to frontend
 
 ---
