@@ -7,3 +7,4 @@ Visitors to the site can browse the latest videos from the YouTube channel, read
 The YouTube channel is at https://www.youtube.com/@EverydayAITutor. Subscribing is free and requires no sign-up.
 
 Content on the site is organized around a structured learning path — from understanding what AI is, to using AI tools like ChatGPT and Claude, to mastering prompting, and eventually building real things with AI. Every step is designed for people with no prior technical knowledge.
+ 
