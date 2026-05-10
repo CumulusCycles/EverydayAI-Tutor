@@ -53,18 +53,25 @@ cdk.context.json
 .cursor/*
 !.cursor/rules
 
-# ── Claude Code ─────────────────────────────────────────
-.claude/cache/
-.claude/tmp/
-.claude/logs/
-.claude/*.log
-*.claude.log
-.claude/store/
-
 # ── Playwright ──────────────────────────────────────────
 playwright-report/
 test-results/
 .playwright/
+
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.python-version
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
 
 # ── Misc ────────────────────────────────────────────────
 *.log
