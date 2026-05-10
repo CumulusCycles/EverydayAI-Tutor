@@ -87,7 +87,7 @@ flowchart TD
     E --> F[Lambda\nPython]
     F --> G[(DynamoDB)]
     F --> H[Bedrock\nKnowledge Base]
-    H --> I[(Vector Store\nS3 / OpenSearch)]
+    H --> I[(Vector Store\nS3 Vectors)]
 
     subgraph AWS [AWS — us-east-1]
         B
@@ -123,7 +123,7 @@ flowchart LR
     B --> C[DynamoDB Streams]
     C --> D[Lambda\nPython]
     D --> E[Bedrock\nKnowledge Base]
-    E --> F[(Vector Store\nS3 or OpenSearch\nServerless)]
+    E --> F[(Vector Store\nS3 Vectors)]
 
     style A fill:#F97316,color:#fff
     style B fill:#5B6EF5,color:#fff
@@ -184,7 +184,7 @@ flowchart LR
 |---|---|---|
 | Content storage | DynamoDB | Structured data, fast reads, powers site content pages |
 | Search index | Bedrock Knowledge Base | Semantic search, natural language queries, managed embeddings |
-| Vector store | S3 or OpenSearch Serverless | S3 is cheaper for low traffic; OpenSearch for higher query volume |
+| Vector store | S3 Vectors | Native AWS vector store — no separate service to manage, cost-effective at any query volume |
 | Lambda runtime | Python | Dominant language in AI/ML ecosystem; best Bedrock SDK support |
 | Sync mechanism | DynamoDB Streams | Event-driven, no polling, automatic on content change |
 
@@ -194,5 +194,5 @@ flowchart LR
 
 - DynamoDB is the **source of truth** — Bedrock indexes a copy of the content
 - All Lambdas written in **Python**
-- Vector store choice (S3 vs OpenSearch Serverless) to be determined based on query volume and latency requirements at implementation time
+- Vector store: S3 Vectors — implemented and deployed
 - Agentic search is a **future enhancement** — out of scope at launch
