@@ -78,7 +78,7 @@ export class ChatbotStack extends cdk.Stack {
     // HTTP API with CORS
     const httpApi = new apigatewayv2.HttpApi(this, 'ChatbotApi', {
       corsPreflight: {
-        allowOrigins: ['https://aieverydaytutor.com'],
+        allowOrigins: ['https://aieverydaytutor.com', 'https://www.aieverydaytutor.com'],
         allowMethods: [apigatewayv2.CorsHttpMethod.POST],
         allowHeaders: ['Content-Type'],
       },
