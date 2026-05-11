@@ -186,7 +186,7 @@ Cards open external links in a new tab.
 
 ### Bottom Bar
 ```
-© 2026 EverydayAI Tutor. All rights reserved.  |  Privacy Policy
+© 2026 EverydayAI Tutor.  |  Privacy Policy
 ```
 
 ---

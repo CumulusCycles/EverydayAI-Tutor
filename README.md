@@ -95,4 +95,4 @@ All project documentation lives in [`docs/`](docs/README.md).
 
 ## License
 
-Private — all rights reserved. © 2026 EverydayAI Tutor.
+© 2026 EverydayAI Tutor.

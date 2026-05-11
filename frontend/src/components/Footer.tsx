@@ -70,7 +70,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-brand-gray pt-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[13px] text-brand-slate">
-            © {new Date().getFullYear()} EverydayAI Tutor. All rights reserved.
+            © {new Date().getFullYear()} EverydayAI Tutor.
           </p>
           <div className="flex items-center gap-4">
             <Link
