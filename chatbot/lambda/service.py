@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 bedrock_agent_runtime = boto3.client("bedrock-agent-runtime")
 
 KB_ID = os.environ["KB_ID"]
-MODEL_ARN = "global.anthropic.claude-sonnet-4-5-20251001-v1:0"
+MODEL_ARN = "us.anthropic.claude-sonnet-4-5-20251001-v1:0"
 
 SYSTEM_PROMPT = """You are a helpful AI assistant for AIEverydayTutor.com — a website and YouTube channel that teaches practical AI skills to everyday people with no technical background required.
 
