@@ -1,5 +1,7 @@
 # EverydayAI Tutor
 
+![EverydayAI Tutor](docs/branding/images/readme-banner.png)
+
 Monorepo for [AIEverydayTutor.com](https://www.aieverydaytutor.com) — the website for the [EverydayAI Tutor](https://www.youtube.com/@EverydayAITutor) YouTube channel.
 
 > Practical AI for Everyday People — From Curious Beginner to Confident AI User
