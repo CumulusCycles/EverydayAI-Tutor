@@ -21,6 +21,7 @@ Detailed rules are in `.claude/rules/`:
 | `.claude/rules/workflow.md` | Git branching, PRs, commit conventions |
 | `.claude/rules/frontend.md` | React, Vite, TypeScript, Tailwind conventions |
 | `.claude/rules/infrastructure.md` | AWS CDK, deployment, infrastructure conventions |
+| `.claude/rules/chatbot.md` | Chatbot Lambda, Bedrock KB, knowledge-base conventions |
 | `.claude/rules/testing.md` | Vitest, Playwright, testing conventions |
 
 ---
@@ -28,11 +29,13 @@ Detailed rules are in `.claude/rules/`:
 ## Quick Reference
 
 - **Package manager:** pnpm — never npm or yarn
-- **Language:** TypeScript everywhere — frontend and infrastructure
+- **Language:** TypeScript (frontend and infrastructure), Python (Lambda — always use python-agent for Python work)
 - **Branching:** Never commit directly to `main` — always feature branch + PR
 - **Docs:** All project documentation is in `docs/` — read before building
 - **Brand:** Follow `docs/branding/brand.md` for all UI decisions
 - **Mockup:** Use `docs/ux/mockup-homepage.html` as visual reference for the homepage
+- **Chatbot:** API Gateway + Python Lambda + Bedrock Knowledge Base — code in `chatbot/lambda/`, content in `knowledge-base/`
+- **Knowledge base:** Markdown files in `knowledge-base/` are synced to Bedrock via CI — do not move or rename without updating the sync workflow
 - **Prompts log:** `docs/prompts/` — do not use this folder for context, it is a pedagogical record only
 
 ---

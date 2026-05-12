@@ -2,36 +2,34 @@
 
 ![EverydayAI Tutor](docs/branding/images/readme-banner.png)
 
-Monorepo for [AIEverydayTutor.com](https://www.aieverydaytutor.com) — the website for the [EverydayAI Tutor](https://www.youtube.com/@EverydayAITutor) YouTube channel.
+Monorepo for [AIEverydayTutor.com](https://www.aieverydaytutor.com) — the site for the [EverydayAI Tutor](https://www.youtube.com/@EverydayAITutor) YouTube channel.
 
 > Practical AI for Everyday People — From Curious Beginner to Confident AI User
 
 ---
 
-## Overview
+## What this is
 
-AIEverydayTutor.com is a channel hub for the EverydayAI Tutor YouTube channel. It showcases videos, playlists, and blog posts for people learning to use AI in everyday life — no technical background required.
+A static React site (videos, blog, about) plus AWS-hosted infrastructure. Optional **AI chat** is backed by API Gateway, a Python Lambda, and **Amazon Bedrock Knowledge Base** (content synced from `knowledge-base/`).
 
 ---
 
-## Repo Structure
+## Repository layout
 
 ```
 /
-├── frontend/          # React + Vite + TypeScript application
-├── infrastructure/    # AWS CDK TypeScript stack
-└── docs/              # Project documentation
-    ├── README.md      # Docs index
-    ├── branding/      # Brand identity, color palette, and image assets
-    │   └── images/    # Logo, banner, thumbnails, favicon
-    ├── tech/          # Technical documentation — stack and architecture
-    ├── ux/            # UX documentation — site structure and mockups
-    └── prompts/       # Claude Code prompt log — pedagogical record
+├── frontend/           # React + Vite + TypeScript + Tailwind
+├── infrastructure/     # AWS CDK (site stack + chatbot stack)
+├── chatbot/lambda/     # Python Lambda — Bedrock KB + converse API
+├── knowledge-base/     # Markdown for Bedrock ingestion (synced via CI)
+├── docs/               # Brand, UX, tech docs, Claude Code prompt log
+├── .github/workflows/  # CI/CD — frontend, infrastructure, KB sync
+└── SETUP.md            # Full local + AWS + GitHub setup
 ```
 
 ---
 
-## Tech Stack
+## Tech stack
 
 | Layer | Technology |
 |---|---|
@@ -43,58 +41,57 @@ AIEverydayTutor.com is a channel hub for the EverydayAI Tutor YouTube channel. I
 | DNS | AWS Route 53 |
 | SSL | AWS ACM |
 | CI/CD | GitHub Actions (OIDC — no stored AWS credentials) |
-| Package Manager | pnpm |
-
-For full details see [`docs/tech/tech-stack.md`](docs/tech/tech-stack.md).
+| Package manager | pnpm |
 
 ---
 
-## Getting Started
+## Quick start (frontend only)
 
-See [SETUP.md](SETUP.md) for full setup instructions including prerequisites, AWS configuration, GitHub PAT setup, and Claude Code configuration.
+Prerequisites: **Node.js** and **pnpm** — versions in [SETUP.md](SETUP.md).
 
-### Quick Start
 ```bash
-# Clone the repo
 git clone https://github.com/CumulusCycles/EverydayAI-Tutor.git
 cd EverydayAI-Tutor
 
-# Copy environment variables
+# Root PAT for tooling (e.g. Claude Code) — see SETUP.md
 cp .env.example .env
-# Add your GITHUB_TOKEN to .env
 
-# Install frontend dependencies
 cd frontend
 pnpm install
 pnpm dev
 ```
 
+Open [http://localhost:5173](http://localhost:5173).  
+Chat widget needs `VITE_CHAT_API_URL` in **`frontend/.env`** — see [SETUP.md](SETUP.md).
+
+---
+
+## Where to read next
+
+| Topic | Location |
+|---|---|
+| Prerequisites, AWS CLI, CDK, Bedrock secrets, PAT | [SETUP.md](SETUP.md) |
+| Stack, testing, CI/CD overview | [docs/tech/tech-stack.md](docs/tech/tech-stack.md) |
+| Architecture diagrams | [docs/tech/architecture-diagram.md](docs/tech/architecture-diagram.md) |
+| Brand & UI | [docs/branding/brand.md](docs/branding/brand.md), [docs/ux/site-structure.md](docs/ux/site-structure.md) |
+| Docs index | [docs/README.md](docs/README.md) |
+| Project rules (Claude Code, PRs, conventions) | [CLAUDE.md](CLAUDE.md), [.claude/rules/](.claude/rules/) |
+
+---
+
+## Contributing
+
+- Default branch: **`main`**. Do not commit directly to `main` — use a feature branch and a PR (see [.claude/rules/workflow.md](.claude/rules/workflow.md)).
+- **Package manager:** `pnpm` only — no npm or yarn.
+
 ---
 
 ## Deployment
 
-Infrastructure is provisioned with AWS CDK and deployed automatically via GitHub Actions on push to `main`. GitHub Actions authenticates with AWS via OIDC — no long-lived credentials are stored anywhere.
+Pushes to **`main`** trigger GitHub Actions. AWS access uses **OIDC** — no long-lived AWS keys stored in GitHub. Frontend artifacts go to **S3** with **CloudFront** invalidation; infrastructure via **`cdk deploy`**.
 
-- Frontend changes → builds with Vite → syncs to S3 → CloudFront cache invalidation
-- Infrastructure changes → `cdk deploy`
-
-For full details see [`docs/tech/architecture-diagram.md`](docs/tech/architecture-diagram.md).
+Details: [SETUP.md](SETUP.md), [docs/tech/architecture-diagram.md](docs/tech/architecture-diagram.md).
 
 ---
 
-## Documentation
-
-All project documentation lives in [`docs/`](docs/README.md).
-
-| Folder | Contents |
-|---|---|
-| [`docs/branding/`](docs/branding/) | Brand guide, color palette, image assets |
-| [`docs/tech/`](docs/tech/) | Tech stack, architecture diagrams, IAM policy |
-| [`docs/ux/`](docs/ux/) | Site structure, homepage mockup |
-| [`docs/prompts/`](docs/prompts/) | Claude Code prompt log |
-
----
-
-## License
-
-© 2026 EverydayAI Tutor.
+<p align="right">© 2026 EverydayAI Tutor.</p>
