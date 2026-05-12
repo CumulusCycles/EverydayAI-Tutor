@@ -130,7 +130,7 @@ export default function ChatWidget() {
                 className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`rounded-xl px-3 py-2 text-sm max-w-[85%] leading-relaxed ${
+                  className={`rounded-xl px-3 py-2 text-sm max-w-[85%] leading-relaxed break-words ${
                     msg.role === 'user'
                       ? 'bg-brand-orange text-white'
                       : 'bg-brand-beige text-brand-charcoal'
