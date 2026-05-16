@@ -40,6 +40,21 @@ Before shipping any branch that touches project architecture, stack, tooling, or
 - Update repo structure trees, routing tables, env var names, model IDs, and scope descriptions to match reality
 - This applies to: new routes, new Lambda functions, new stacks, new secrets, dependency changes, and tooling changes
 
+## Keeping Memory Current
+
+Before every ship, update project memory at `/Users/rob/.claude/projects/-Users-rob-Development-EverydayAI-Tutor/memory/`:
+
+- Update `project_scaffold.md` — add merged PRs, update current state sections, refresh "What's next"
+- Update `MEMORY.md` index entry to reflect the new PR count and state summary
+
+## Keeping Prompts Current
+
+Before every ship, update the prompts log in `docs/prompts/`:
+
+- Add a new `session-N-<slug>.md` for the current branch if one doesn't exist yet
+- Add a row to the sessions table in `docs/prompts/README.md`
+- The prompts file is a pedagogical record — include the actual prompts used, what was built, and any notable implementation decisions
+
 ## Shipping Work
 
 Use the `/ship` command to lint, build, commit, push, and open a PR in one shot:
