@@ -32,6 +32,14 @@ docs/update-site-structure
 infra/cloudfront-distribution
 ```
 
+## Keeping Claude Config Current
+
+Before shipping any branch that touches project architecture, stack, tooling, or new features:
+
+- Review `CLAUDE.md` and all files under `.claude/` for stale content
+- Update repo structure trees, routing tables, env var names, model IDs, and scope descriptions to match reality
+- This applies to: new routes, new Lambda functions, new stacks, new secrets, dependency changes, and tooling changes
+
 ## Shipping Work
 
 Use the `/ship` command to lint, build, commit, push, and open a PR in one shot:

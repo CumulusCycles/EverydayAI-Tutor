@@ -19,14 +19,11 @@ You are a specialist Python developer for the EverydayAI Tutor project. You focu
 ## Project Structure for Lambda Functions
 
 ```
-lambda/
-├── chat/
-│   ├── handler.py          # Lambda entry point — thin, delegates to service
-│   ├── service.py          # Business logic — Bedrock KB query, response formatting
-│   ├── requirements.txt    # Python dependencies
-│   └── tests/
-│       ├── test_handler.py
-│       └── test_service.py
+chatbot/
+└── lambda/
+    ├── handler.py          # Lambda entry point — thin, request parsing + CORS
+    ├── service.py          # Business logic — Bedrock KB retrieve_and_generate
+    └── requirements.txt    # Additional deps (boto3 is Lambda runtime-provided)
 ```
 
 ## Lambda Handler Pattern
@@ -67,12 +64,18 @@ def handler(event, context):
             'body': json.dumps({'error': 'Internal server error'})
         }
 
-def cors_headers():
+ALLOWED_ORIGINS = {
+    'https://aieverydaytutor.com',
+    'https://www.aieverydaytutor.com',
+    'http://localhost:5173',
+}
+
+def cors_headers(origin: str) -> dict:
     return {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://aieverydaytutor.com',
+        'Access-Control-Allow-Origin': origin if origin in ALLOWED_ORIGINS else 'https://aieverydaytutor.com',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
     }
 ```
 
@@ -84,8 +87,8 @@ import os
 
 bedrock_agent_runtime = boto3.client('bedrock-agent-runtime')
 
-KNOWLEDGE_BASE_ID = os.environ['KNOWLEDGE_BASE_ID']
-MODEL_ARN = 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0'
+KB_ID = os.environ['KB_ID']
+MODEL_ARN = 'global.anthropic.claude-sonnet-4-5-20250929-v1:0'
 
 SYSTEM_PROMPT = """You are a helpful AI assistant for AIEverydayTutor.com — a website and YouTube channel that teaches practical AI skills to everyday people with no technical background required.
 
@@ -107,7 +110,7 @@ def process_query(message: str, history: list) -> dict:
         retrieveAndGenerateConfiguration={
             'type': 'KNOWLEDGE_BASE',
             'knowledgeBaseConfiguration': {
-                'knowledgeBaseId': KNOWLEDGE_BASE_ID,
+                'knowledgeBaseId': KB_ID,
                 'modelArn': MODEL_ARN,
                 'generationConfiguration': {
                     'promptTemplate': {
@@ -150,7 +153,7 @@ def process_query(message: str, history: list) -> dict:
 
 | Variable | Description |
 |---|---|
-| `KNOWLEDGE_BASE_ID` | Bedrock Knowledge Base ID |
+| `KB_ID` | Bedrock Knowledge Base ID — set by CDK, injected via GitHub secret `BEDROCK_KB_ID` |
 
 ## Important Notes
 
