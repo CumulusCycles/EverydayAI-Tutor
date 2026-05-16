@@ -43,3 +43,5 @@ prompts/
 | 11 | `session-11-chatbot-ui.md` | `feature/chatbot-ui` | React floating chat widget connecting to API Gateway + Bedrock KB |
 | 12 | `session-12-docs-config-video-pipeline.md` | various (#41–45) | Chat URL fix, README/Claude config refresh, knowledge-base reorganization, video pipeline v2 runbook |
 | 13 | `session-13-gen-videos-script.md` | `feature/gen-videos-script` | Phase 1: `tools/gen-videos.py` — MD frontmatter parser and static JSON generator (26 tests) |
+| 14 | `session-14-frontend-videos-json.md` | `feature/frontend-videos-json` | Phase 2: replace `videos.ts` with `videos.json` import; update Video interface; wire HomePage + VideosPage |
+| 15 | `session-15-ci-video-pipeline.md` | `feature/ci-video-pipeline` | Phase 3: wire generator into deploy.yml; expand frontend path trigger; add memory + prompts rules to /ship |
