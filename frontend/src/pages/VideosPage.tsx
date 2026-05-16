@@ -1,19 +1,10 @@
 import ContentCard from '../components/ContentCard'
-import { videos } from '../data/videos'
+import videosData from '../data/videos.json'
 import type { Video } from '../types/content'
 
-function sortVideos(items: Video[]): Video[] {
-  return [...items].sort((a, b) => {
-    if (!a.publishDate && !b.publishDate) return 0
-    if (!a.publishDate) return 1
-    if (!b.publishDate) return -1
-    return b.publishDate.localeCompare(a.publishDate)
-  })
-}
+const videos = videosData as Video[]
 
 export default function VideosPage() {
-  const sorted = sortVideos(videos)
-
   return (
     <>
       {/* Page header */}
@@ -30,17 +21,17 @@ export default function VideosPage() {
       {/* Card grid */}
       <section className="py-16 px-6 md:px-12 bg-brand-white">
         <div className="max-w-[1200px] mx-auto">
-          {sorted.length === 0 ? (
+          {videos.length === 0 ? (
             <p className="text-brand-slate">No videos yet. Check back soon!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {sorted.map((video) => (
+              {videos.map((video) => (
                 <ContentCard
-                  key={video.id}
+                  key={video.videoId}
                   title={video.title}
                   description={video.description}
                   publishDate={video.publishDate}
-                  thumbnailUrl={video.thumbnailUrl}
+                  thumbnailUrl={`/thumbnails/video/${video.thumbnail}`}
                   linkUrl={video.youtubeUrl}
                   linkText="Watch on YouTube"
                 />
