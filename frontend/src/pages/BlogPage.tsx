@@ -1,19 +1,10 @@
 import ContentCard from '../components/ContentCard'
-import { posts } from '../data/posts'
+import blogsData from '../data/blogs.json'
 import type { BlogPost } from '../types/content'
 
-function sortPosts(items: BlogPost[]): BlogPost[] {
-  return [...items].sort((a, b) => {
-    if (!a.publishDate && !b.publishDate) return 0
-    if (!a.publishDate) return 1
-    if (!b.publishDate) return -1
-    return b.publishDate.localeCompare(a.publishDate)
-  })
-}
+const posts = blogsData as BlogPost[]
 
 export default function BlogPage() {
-  const sorted = sortPosts(posts)
-
   return (
     <>
       {/* Page header */}
@@ -29,17 +20,17 @@ export default function BlogPage() {
       {/* Card grid */}
       <section className="py-16 px-6 md:px-12 bg-brand-white">
         <div className="max-w-[1200px] mx-auto">
-          {sorted.length === 0 ? (
+          {posts.length === 0 ? (
             <p className="text-brand-slate">No posts yet. Check back soon!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {sorted.map((post) => (
+              {posts.map((post) => (
                 <ContentCard
-                  key={post.id}
+                  key={post.postId}
                   title={post.title}
                   description={post.description}
                   publishDate={post.publishDate}
-                  thumbnailUrl={post.thumbnailUrl}
+                  thumbnailUrl={`/thumbnails/blog/${post.thumbnail}`}
                   linkUrl={post.postUrl}
                   linkText="Read post"
                 />

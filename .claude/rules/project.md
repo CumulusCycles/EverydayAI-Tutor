@@ -16,12 +16,13 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 ├── knowledge-base/    # Markdown files synced to Bedrock S3 bucket via CI
 │   ├── website/       # General site content (about, FAQ, learning journey, etc.)
 │   ├── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
-│   └── blogs/         # One MD file per blog post (future)
-├── tools/             # CI scripts — gen-videos.py generates frontend/src/data/videos.json
+│   └── blogs/         # One MD file per blog post — frontmatter drives cards, prose drives chatbot
+├── tools/             # CI scripts — gen-videos.py and gen-blogs.py generate static JSON at build time
 └── docs/              # All project documentation
     ├── branding/      # Brand guide, color palette, image assets
     ├── tech/          # Tech stack, architecture diagrams
     ├── ux/            # Site structure, homepage mockup
+    ├── runbooks/      # Operational runbooks — New_Video.md, New_Blog.md
     └── prompts/       # Claude Code prompt log — pedagogical record only, do not use for context
 ```
 

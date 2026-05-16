@@ -24,8 +24,8 @@ A React site (videos, blog, about) with an **AI chat assistant** backed by API G
 ├── knowledge-base/     # Markdown for Bedrock ingestion (synced via CI)
 │   ├── website/        #   General site content (about, FAQ, etc.)
 │   ├── videos/         #   One MD file per video — drives cards + chatbot
-│   └── blogs/          #   One MD file per blog post (future)
-├── tools/              # CI scripts (video catalog generator)
+│   └── blogs/          #   One MD file per blog post — drives cards + chatbot
+├── tools/              # CI scripts — gen-videos.py and gen-blogs.py generate static JSON
 ├── docs/               # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/  # CI/CD — frontend, infrastructure, KB sync
 └── SETUP.md            # Full local + AWS + GitHub setup
@@ -87,6 +87,8 @@ Chat widget needs `VITE_CHAT_API_URL` in **`frontend/.env`** — see [SETUP.md](
 
 - Default branch: **`main`**. Do not commit directly to `main` — use a feature branch and a PR (see [.claude/rules/workflow.md](.claude/rules/workflow.md)).
 - **Package manager:** `pnpm` only — no npm or yarn.
+
+> This project was built and implemented with [Claude Code](https://claude.ai/code) — Anthropic's agentic AI coding tool. The full prompt-by-prompt build log is in [`docs/prompts/`](docs/prompts/).
 
 ---
 

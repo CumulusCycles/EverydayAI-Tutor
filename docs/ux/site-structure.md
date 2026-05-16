@@ -200,10 +200,12 @@ Content is authored as Markdown files in `knowledge-base/` — no CMS, no databa
 | Content Type | Source | How it reaches the site |
 |---|---|---|
 | Videos | `knowledge-base/videos/<videoId>.md` | CI runs `tools/gen-videos.py` → generates `frontend/src/data/videos.json` → bundled by Vite |
-| Blog Posts | `knowledge-base/blogs/<postId>.md` | Same pipeline (future — not yet implemented) |
+| Blog Posts | `knowledge-base/blogs/<postId>.md` | CI runs `tools/gen-blogs.py` → generates `frontend/src/data/blogs.json` → bundled by Vite |
 | Chatbot KB | All `knowledge-base/**` MD files | CI syncs to Bedrock S3 bucket → ingestion job updates vector store |
 
-To publish a new video: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest. See `docs/runbooks/New_Video.md` for the full workflow.
+To publish new content: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest.
+- Videos: see `docs/runbooks/New_Video.md`
+- Blog posts: see `docs/runbooks/New_Blog.md`
 
 ---
 

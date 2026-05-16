@@ -39,38 +39,46 @@ flowchart TD
 
 ## 2. CI/CD Pipeline
 
-GitHub Actions workflow triggered on push to `main`.
+GitHub Actions workflow triggered on push to `main`. Three independent path-filtered jobs.
 
 ```mermaid
 flowchart LR
     A([Push to main]) --> B{Path Filter}
-    B -->|/frontend changed| C[pnpm install]
-    C --> D[pnpm build]
-    D --> E[OIDC Auth\nAssume GitHubActionsDeployRole]
-    E --> F[Sync /dist\nto S3]
-    F --> G[CloudFront\nCache Invalidation]
-    B -->|/infrastructure or\n/chatbot changed| H[OIDC Auth\nAssume GitHubActionsDeployRole]
-    H --> I[cdk deploy]
+
+    B -->|frontend or\nknowledge-base/videos\nknowledge-base/blogs\nor tools changed| C[OIDC Auth]
+    C --> C1[gen-videos.py\ngen-blogs.py]
+    C1 --> C2[pnpm build]
+    C2 --> C3[Sync /dist to S3]
+    C3 --> C4[CloudFront\nInvalidation]
+
+    B -->|infrastructure or\nchatbot changed| D[OIDC Auth]
+    D --> D1[cdk deploy --all]
+
+    B -->|knowledge-base\nchanged| E[OIDC Auth]
+    E --> E1[S3 sync\nknowledge-base/]
+    E1 --> E2[Bedrock\nIngestion Job]
 
     style A fill:#F97316,color:#fff
     style B fill:#0F172A,color:#fff
-    style C fill:#5B6EF5,color:#fff
-    style D fill:#5B6EF5,color:#fff
+    style C fill:#22C55E,color:#fff
+    style C1 fill:#5B6EF5,color:#fff
+    style C2 fill:#5B6EF5,color:#fff
+    style C3 fill:#5B6EF5,color:#fff
+    style C4 fill:#5B6EF5,color:#fff
+    style D fill:#22C55E,color:#fff
+    style D1 fill:#5B6EF5,color:#fff
     style E fill:#22C55E,color:#fff
-    style F fill:#5B6EF5,color:#fff
-    style G fill:#5B6EF5,color:#fff
-    style H fill:#22C55E,color:#fff
-    style I fill:#5B6EF5,color:#fff
+    style E1 fill:#5B6EF5,color:#fff
+    style E2 fill:#0F172A,color:#fff
 ```
 
 ### Notes
-- Frontend and infrastructure jobs run independently via path filtering
-- **Authentication:** OIDC — GitHub Actions assumes `GitHubActionsDeployRole` via `aws-actions/configure-aws-credentials`
-- **No AWS credentials stored in GitHub** — OIDC issues temporary credentials per run
-- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only
+- Three independent jobs — frontend, infrastructure, knowledge-base — each triggered by separate path filters
+- **Authentication:** OIDC — GitHub Actions assumes `GitHubActionsDeployRole` — no long-lived credentials stored
+- GitHub secrets: `AWS_ROLE_ARN`, `AWS_REGION`, `BEDROCK_KB_ID`, `KB_BUCKET_NAME`, `BEDROCK_DS_ID`, `VITE_CHAT_API_URL`
 - Cache invalidation uses `/*` — counts as 1 path (first 1,000/month free)
-- No staging environment at launch — deploys directly to production
-- Claude Code creates feature branches, pushes, and opens PRs for review before merging to `main`
+- No staging environment — deploys directly to production
+- Claude Code creates feature branches and opens PRs; merges to `main` trigger CI
 
 ---
 
@@ -85,7 +93,6 @@ flowchart TD
     C --> D[S3\nStatic Site]
     C --> E[API Gateway]
     E --> F[Lambda\nPython]
-    F --> G[(DynamoDB)]
     F --> H[Bedrock\nKnowledge Base]
     H --> I[(Vector Store\nS3 Vectors)]
 
@@ -95,7 +102,6 @@ flowchart TD
         D
         E
         F
-        G
         H
         I
     end
@@ -106,39 +112,38 @@ flowchart TD
     style D fill:#5B6EF5,color:#fff
     style E fill:#5B6EF5,color:#fff
     style F fill:#F97316,color:#fff
-    style G fill:#0F172A,color:#fff
     style H fill:#0F172A,color:#fff
     style I fill:#0F172A,color:#fff
 ```
 
 ---
 
-## 4. Agentic Search — Content Ingestion Flow
+## 4. Content Ingestion Flow
 
-How content gets indexed for semantic search.
+How Markdown content gets indexed in the Bedrock Knowledge Base for chatbot retrieval.
 
 ```mermaid
 flowchart LR
-    A([Content Added\nor Updated]) --> B[(DynamoDB\nSource of Truth)]
-    B --> C[DynamoDB Streams]
-    C --> D[Lambda\nPython]
+    A([MD file committed\nto knowledge-base/]) --> B[GitHub Actions\nKB sync job]
+    B --> C[aws s3 sync\nknowledge-base/ to S3]
+    C --> D[start-ingestion-job]
     D --> E[Bedrock\nKnowledge Base]
     E --> F[(Vector Store\nS3 Vectors)]
 
     style A fill:#F97316,color:#fff
-    style B fill:#5B6EF5,color:#fff
+    style B fill:#22C55E,color:#fff
     style C fill:#5B6EF5,color:#fff
-    style D fill:#F97316,color:#fff
+    style D fill:#5B6EF5,color:#fff
     style E fill:#0F172A,color:#fff
     style F fill:#0F172A,color:#fff
 ```
 
 ### Flow Description
-1. A blog post or YouTube video description is added or updated in **DynamoDB**
-2. **DynamoDB Streams** detects the change and triggers a Lambda function
-3. **Lambda (Python)** processes the content and sends it to Bedrock
-4. **Bedrock Knowledge Base** chunks the content, creates vector embeddings, and stores them in the Vector Store
-5. Content is now indexed and available for semantic search
+1. A Markdown file is committed to `knowledge-base/` (videos, blogs, or website content) and merged to `main`
+2. **GitHub Actions** knowledge-base job runs: `aws s3 sync knowledge-base/ → KB S3 bucket` (with `--delete` so S3 mirrors the repo exactly)
+3. **Bedrock ingestion job** is triggered via `bedrock-agent start-ingestion-job`
+4. **Bedrock Knowledge Base** chunks the Markdown content, creates vector embeddings, and stores them in the Vector Store
+5. Content is now indexed and available for chatbot semantic retrieval
 
 ---
 
@@ -178,21 +183,23 @@ flowchart LR
 
 ---
 
-## Agentic Search — Key Design Decisions
+## Key Design Decisions
 
 | Decision | Choice | Reason |
 |---|---|---|
-| Content storage | DynamoDB | Structured data, fast reads, powers site content pages |
-| Search index | Bedrock Knowledge Base | Semantic search, natural language queries, managed embeddings |
-| Vector store | S3 Vectors | Native AWS vector store — no separate service to manage, cost-effective at any query volume |
-| Lambda runtime | Python | Dominant language in AI/ML ecosystem; best Bedrock SDK support |
-| Sync mechanism | DynamoDB Streams | Event-driven, no polling, automatic on content change |
+| Content source of truth | Markdown files in `knowledge-base/` | Single file per video/post, git-versioned, drives both frontend cards and chatbot KB |
+| Frontend content catalog | Static JSON (videos.json, blogs.json) | Build-time generation — no runtime API, no failure modes, free at any scale |
+| Chatbot search index | Bedrock Knowledge Base | Semantic search, natural language queries, managed embeddings |
+| Vector store | S3 Vectors | Native AWS vector store — no separate service to manage |
+| Lambda runtime | Python | Best Bedrock SDK support |
+| KB sync mechanism | GitHub Actions CI (`aws s3 sync` + `start-ingestion-job`) | Simple, event-driven on merge to main, no additional infrastructure |
 
 ---
 
 ## Notes
 
-- DynamoDB is the **source of truth** — Bedrock indexes a copy of the content
+- Markdown files are the **source of truth** — frontmatter drives the site, prose drives the chatbot
+- No DynamoDB — content pipeline is fully static (build-time JSON generation)
 - All Lambdas written in **Python**
 - Vector store: S3 Vectors — implemented and deployed
 - Chatbot is live — powered by **AWS Bedrock Knowledge Base** with **S3 Vectors**

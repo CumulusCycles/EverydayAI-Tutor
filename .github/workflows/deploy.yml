@@ -31,7 +31,7 @@ jobs:
         id: detect
         run: |
           changed=$(git diff --name-only HEAD^ HEAD)
-          echo "frontend=$(echo "$changed" | grep -qE '^(frontend|knowledge-base/videos|tools)/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "frontend=$(echo "$changed" | grep -qE '^(frontend|knowledge-base/videos|knowledge-base/blogs|tools)/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "infrastructure=$(echo "$changed" | grep -qE '^(infrastructure|chatbot)/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "knowledge_base=$(echo "$changed" | grep -q '^knowledge-base/' && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
@@ -64,6 +64,13 @@ jobs:
             --knowledge-base-dir knowledge-base/videos \
             --thumbnails-dir frontend/public/thumbnails/video \
             --output frontend/src/data/videos.json
+
+      - name: Generate blogs.json
+        run: |
+          python tools/gen-blogs.py \
+            --knowledge-base-dir knowledge-base/blogs \
+            --thumbnails-dir frontend/public/thumbnails/blog \
+            --output frontend/src/data/blogs.json
 
       - name: Build
         run: pnpm build

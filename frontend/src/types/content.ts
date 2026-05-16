@@ -8,10 +8,10 @@ export interface Video {
 }
 
 export interface BlogPost {
-  id: string
+  postId: string
   title: string
   description: string
-  publishDate?: string // ISO "2026-05-09"; omit for coming-soon entries
-  thumbnailUrl?: string
-  postUrl: string // empty string for coming-soon entries
+  publishDate: string // ISO "YYYY-MM-DD"
+  postUrl: string
+  thumbnail: string // filename only, e.g. "b_my-first-post.png"
 }
