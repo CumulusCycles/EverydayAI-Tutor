@@ -14,9 +14,10 @@
 ```
 infrastructure/
 ├── bin/
-│   └── app.ts         # CDK app entry point
+│   └── app.ts              # CDK app entry point — instantiates both stacks
 ├── lib/
-│   └── stack.ts       # Main CDK stack
+│   ├── stack.ts            # Site stack — S3, CloudFront, Route 53, ACM, OIDC, Bedrock KB
+│   └── chatbot-stack.ts    # Chatbot stack — Python Lambda, HTTP API Gateway, IAM
 ├── cdk.json
 ├── package.json
 └── tsconfig.json
@@ -53,9 +54,19 @@ cdk deploy
 - GitHub Actions authenticates with AWS via **OpenID Connect (OIDC)** — no long-lived credentials ever
 - The OIDC provider and `GitHubActionsDeployRole` are provisioned in the CDK stack (`lib/stack.ts`)
 - GitHub Actions assumes the role per-run via `aws-actions/configure-aws-credentials`
-- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only
 - **Never** store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in GitHub secrets
 - Role policy is documented in `docs/tech/iam-policy.json`
+
+### Required GitHub Secrets
+
+| Secret | Purpose |
+|---|---|
+| `AWS_ROLE_ARN` | OIDC role ARN for GitHub Actions |
+| `AWS_REGION` | `us-east-1` |
+| `BEDROCK_KB_ID` | Bedrock Knowledge Base ID — injected at CDK synth time |
+| `KB_BUCKET_NAME` | S3 bucket name for Bedrock KB source — injected at CDK synth time |
+| `BEDROCK_DS_ID` | Bedrock Data Source ID — used by KB sync workflow |
+| `VITE_CHAT_API_URL` | Chat API Gateway URL — baked into frontend at Vite build time |
 
 ## Safety Rules
 

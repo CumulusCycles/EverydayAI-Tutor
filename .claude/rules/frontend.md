@@ -14,15 +14,15 @@
 frontend/
 ├── src/
 │   ├── assets/        # Static assets (images, fonts)
-│   ├── components/    # Shared reusable components
+│   ├── components/    # Shared reusable components (including ChatWidget)
 │   ├── data/          # Static TypeScript data files (videos, blog posts)
 │   ├── pages/         # Page-level components (one per route)
 │   ├── types/         # Shared TypeScript types and interfaces
 │   └── main.tsx       # App entry point
+├── e2e/               # Playwright E2E tests
 ├── public/            # Public static files
 ├── index.html
 ├── vite.config.ts
-├── tailwind.config.ts
 └── tsconfig.json
 ```
 
@@ -45,7 +45,7 @@ frontend/
 ## Tailwind Rules
 
 - Use Tailwind utility classes for all styling
-- Follow the brand color palette — use exact hex values via Tailwind config
+- **Tailwind v4** — brand colors are defined via `@theme` in `src/index.css`, not in a `tailwind.config.ts`
 - Responsive design required — mobile first
 - No inline styles unless absolutely necessary
 
@@ -75,7 +75,9 @@ export const videos: Video[] = [ ... ];
 | `/videos` | `VideosPage` |
 | `/blog` | `BlogPage` |
 | `/about` | `AboutPage` |
+| `/built-with` | `BuiltWithAIPage` |
 | `/privacy` | `PrivacyPage` |
+| `*` | `NotFound` |
 
 ## External Links
 

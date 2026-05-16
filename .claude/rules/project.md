@@ -10,7 +10,10 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 ```
 /
 ├── frontend/          # React + Vite + TypeScript application
-├── infrastructure/    # AWS CDK TypeScript stack
+├── infrastructure/    # AWS CDK TypeScript stack (site stack + chatbot stack)
+├── chatbot/
+│   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
+├── knowledge-base/    # Markdown files synced to Bedrock S3 bucket via CI
 └── docs/              # All project documentation
     ├── branding/      # Brand guide, color palette, image assets
     ├── tech/          # Tech stack, architecture diagrams
@@ -45,10 +48,11 @@ When using an MCP server, always announce it before making the call:
 - "Using Context7 to look up current [library] API..."
 - "Using AWS IaC MCP to check CDK best practices..."
 
-## Current Scope — MVP
+## Current Scope
 
-This is a static site at launch. No backend, no database, no authentication.
+The site is live with a working chatbot backend. No authentication, no database.
 
-- Video and blog post content is managed as static TypeScript data files
-- No CMS, no API calls at launch
-- Future enhancements (DynamoDB, Lambda, Bedrock search) are out of scope for now
+- Video and blog post content is managed as static TypeScript data files in `frontend/src/data/`
+- Chatbot is live: API Gateway → Python Lambda → Bedrock Knowledge Base (RAG)
+- Knowledge base content lives in `knowledge-base/` as Markdown; CI syncs to Bedrock on push to main
+- No CMS, no user accounts, no newsletter — out of scope
