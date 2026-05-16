@@ -41,3 +41,5 @@ prompts/
 | 09 | `session-09-hooks.md` | `setup/hooks` | PostToolUse hooks for auto-formatting TS/TSX and Python on every file edit |
 | 10 | `session-10-chatbot-lambda.md` | `feature/chatbot-lambda` | Python Lambda + API Gateway querying Bedrock Knowledge Base with S3 Vectors |
 | 11 | `session-11-chatbot-ui.md` | `feature/chatbot-ui` | React floating chat widget connecting to API Gateway + Bedrock KB |
+| 12 | `session-12-docs-config-video-pipeline.md` | various (#41–45) | Chat URL fix, README/Claude config refresh, knowledge-base reorganization, video pipeline v2 runbook |
+| 13 | `session-13-gen-videos-script.md` | `feature/gen-videos-script` | Phase 1: `tools/gen-videos.py` — MD frontmatter parser and static JSON generator (26 tests) |
