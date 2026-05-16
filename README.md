@@ -10,7 +10,7 @@ Monorepo for [AIEverydayTutor.com](https://www.aieverydaytutor.com) — the site
 
 ## What this is
 
-A static React site (videos, blog, about) plus AWS-hosted infrastructure. Optional **AI chat** is backed by API Gateway, a Python Lambda, and **Amazon Bedrock Knowledge Base** (content synced from `knowledge-base/`).
+A React site (videos, blog, about) with an **AI chat assistant** backed by API Gateway, a Python Lambda, and **Amazon Bedrock Knowledge Base**. Video and blog content is authored in Markdown and synced automatically to the site and chatbot via CI — no code edits required to publish.
 
 ---
 
@@ -22,6 +22,10 @@ A static React site (videos, blog, about) plus AWS-hosted infrastructure. Option
 ├── infrastructure/     # AWS CDK (site stack + chatbot stack)
 ├── chatbot/lambda/     # Python Lambda — Bedrock KB + converse API
 ├── knowledge-base/     # Markdown for Bedrock ingestion (synced via CI)
+│   ├── website/        #   General site content (about, FAQ, etc.)
+│   ├── videos/         #   One MD file per video — drives cards + chatbot
+│   └── blogs/          #   One MD file per blog post (future)
+├── tools/              # CI scripts (video catalog generator)
 ├── docs/               # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/  # CI/CD — frontend, infrastructure, KB sync
 └── SETUP.md            # Full local + AWS + GitHub setup

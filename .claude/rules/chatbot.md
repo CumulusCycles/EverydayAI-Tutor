@@ -5,7 +5,7 @@
 - **Trigger:** API Gateway (POST `/chat`) → Python Lambda
 - **AI:** Amazon Bedrock `retrieve_and_generate` — Knowledge Base RAG pattern
 - **Model:** Claude Sonnet (cross-region inference profile) — see `MODEL_ARN` in `service.py`
-- **Knowledge Base:** Markdown files in `knowledge-base/` synced to Bedrock S3 bucket via CI
+- **Knowledge Base:** Markdown files in `knowledge-base/` synced to Bedrock S3 bucket via CI — organized into `website/`, `videos/`, and `blogs/` subdirectories
 - **Infrastructure:** Defined in CDK chatbot stack (`infrastructure/`)
 
 ## Directory Structure
@@ -43,8 +43,15 @@ chatbot/
 
 ## Knowledge Base Content
 
-- All KB source files live in `knowledge-base/` as Markdown
-- CI syncs `knowledge-base/**` changes on `main` to the Bedrock S3 bucket and triggers ingestion
+The `knowledge-base/` folder is organized into three subdirectories:
+
+| Subdirectory | Contents |
+|---|---|
+| `knowledge-base/website/` | General site content — about, FAQ, learning journey, site overview |
+| `knowledge-base/videos/` | One MD file per video — frontmatter drives the video card catalog; prose drives chatbot retrieval |
+| `knowledge-base/blogs/` | One MD file per blog post (future) |
+
+- CI syncs `knowledge-base/**` on push to `main` → Bedrock S3 bucket → ingestion job (with `--delete`, so S3 mirrors the repo exactly)
 - Do not move, rename, or restructure `knowledge-base/` without updating the sync workflow
 - Keep content factual and brand-consistent — the system prompt instructs the model to answer only from KB context
 

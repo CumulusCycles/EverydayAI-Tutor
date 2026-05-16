@@ -14,6 +14,10 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 ├── chatbot/
 │   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
 ├── knowledge-base/    # Markdown files synced to Bedrock S3 bucket via CI
+│   ├── website/       # General site content (about, FAQ, learning journey, etc.)
+│   ├── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+│   └── blogs/         # One MD file per blog post (future)
+├── tools/             # CI scripts — gen-videos.py generates frontend/src/data/videos.json
 └── docs/              # All project documentation
     ├── branding/      # Brand guide, color palette, image assets
     ├── tech/          # Tech stack, architecture diagrams
