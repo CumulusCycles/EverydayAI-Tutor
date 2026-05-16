@@ -24,8 +24,8 @@ A React site (videos, blog, about) with an **AI chat assistant** backed by API G
 ├── knowledge-base/     # Markdown for Bedrock ingestion (synced via CI)
 │   ├── website/        #   General site content (about, FAQ, etc.)
 │   ├── videos/         #   One MD file per video — drives cards + chatbot
-│   └── blogs/          #   One MD file per blog post (future)
-├── tools/              # CI scripts (video catalog generator)
+│   └── blogs/          #   One MD file per blog post — drives cards + chatbot
+├── tools/              # CI scripts — gen-videos.py and gen-blogs.py generate static JSON
 ├── docs/               # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/  # CI/CD — frontend, infrastructure, KB sync
 └── SETUP.md            # Full local + AWS + GitHub setup

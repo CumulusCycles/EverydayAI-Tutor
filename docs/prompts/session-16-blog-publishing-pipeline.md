@@ -90,6 +90,54 @@ New directory created with `.gitkeep`. Blog thumbnails stored here.
 
 Content Data section updated: documents both `Video` and `BlogPost` interfaces, both JSON imports pattern, both thumbnail URL constructions.
 
+### `frontend/src/pages/BlogPage.test.tsx`
+
+9 tests: empty state (heading, description, empty state message, no cards), populated state (title, description, Read post link with correct href + target + rel, thumbnail src, no empty state message). Uses `vi.doMock` + `vi.resetModules` to control `blogs.json` content per describe block.
+
+### `frontend/src/pages/HomePage.test.tsx`
+
+12 tests across 3 describe blocks (both empty, videos populated, blogs populated): heading, Subscribe CTA links, video empty state, blog empty state, video card rendering, blog card rendering, thumbnail src for both, cross-state empty state preservation.
+
+### `docs/runbooks/New_Blog.md`
+
+New operational runbook mirroring `New_Video.md`: step-by-step publish workflow, full frontmatter field reference, thumbnail spec, local validation commands, CI flow description, error modes table, summary.
+
+### `docs/runbooks/README.md`
+
+New index file: table of runbooks with when-to-use descriptions, pipeline summary.
+
+### `docs/tech/tech-stack.md`
+
+Updated: `blogs/` no longer marked "future"; `tools/` comment mentions both generators; Content Publishing Pipeline section split into Videos + Blog Posts subsections; CI/CD table frontend row updated to include `knowledge-base/blogs/**` and both generators.
+
+### `docs/ux/site-structure.md`
+
+Updated: blog pipeline no longer marked "future"; Content Management table updated; publish instructions updated to reference both runbooks.
+
+### `.claude/rules/project.md`
+
+Updated: `blogs/` no longer marked "future"; `tools/` comment mentions both generators; `runbooks/` added to `docs/` tree.
+
+### `.claude/rules/frontend.md`
+
+Updated: `data/` tree comment changed from "Static TypeScript data files" to "Generated JSON data files"; `src/test/` and `public/thumbnails/` added to project structure tree.
+
+### `.claude/rules/chatbot.md`
+
+Updated: `knowledge-base/blogs/` no longer marked "future".
+
+### `.claude/agents/python-agent.md`
+
+Updated: project structure section now includes `tools/` directory alongside `chatbot/lambda/`.
+
+### `docs/tech/architecture-diagram.md`
+
+Major update: CI/CD diagram (section 2) rewritten to show all 3 jobs with generator steps and KB sync; section 3 DynamoDB node removed (never existed); section 4 rewritten from DynamoDB Streams → actual S3 sync + Bedrock ingestion flow; Key Design Decisions table rewritten to remove DynamoDB and reflect actual architecture; Notes updated.
+
+### `README.md`
+
+Updated: `blogs/` no longer marked "future"; `tools/` comment mentions both generators.
+
 ---
 
 ## Notes
@@ -97,3 +145,5 @@ Content Data section updated: documents both `Video` and `BlogPost` interfaces, 
 - Both pipelines are now symmetric — same generator pattern, same CI step, same seed file, same thumbnail directory convention
 - Blog thumbnail path convention: `frontend/public/thumbnails/blog/<filename>` → served at `/thumbnails/blog/<filename>`
 - `pip install` only runs once before the video generator; the blog generator reuses the already-installed packages (no second `pip install` needed)
+- `vi.doMock` + `vi.resetModules` pattern required for testing components that import JSON at module level — same pattern works for both BlogPage and HomePage
+- Architecture diagram DynamoDB references were from the original v1 design spec (never built) — now correctly reflects the actual MD → S3 → Bedrock pipeline

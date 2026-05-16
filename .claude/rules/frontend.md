@@ -15,12 +15,14 @@ frontend/
 ├── src/
 │   ├── assets/        # Static assets (images, fonts)
 │   ├── components/    # Shared reusable components (including ChatWidget)
-│   ├── data/          # Static TypeScript data files (videos, blog posts)
+│   ├── data/          # Generated JSON data files (videos.json, blogs.json) — seed [] committed
 │   ├── pages/         # Page-level components (one per route)
+│   ├── test/          # Vitest setup (setup.ts)
 │   ├── types/         # Shared TypeScript types and interfaces
 │   └── main.tsx       # App entry point
 ├── e2e/               # Playwright E2E tests
-├── public/            # Public static files
+├── public/
+│   └── thumbnails/    # Static thumbnails — video/ and blog/ subdirectories
 ├── index.html
 ├── vite.config.ts
 └── tsconfig.json

@@ -16,7 +16,7 @@ You are a specialist Python developer for the EverydayAI Tutor project. You focu
 - All Lambda functions are written in Python
 - Follow AWS Lambda best practices — thin handlers, business logic in service modules
 
-## Project Structure for Lambda Functions
+## Project Structure
 
 ```
 chatbot/
@@ -24,6 +24,15 @@ chatbot/
     ├── handler.py          # Lambda entry point — thin, request parsing + CORS
     ├── service.py          # Business logic — Bedrock KB retrieve_and_generate
     └── requirements.txt    # Additional deps (boto3 is Lambda runtime-provided)
+
+tools/
+├── gen-videos.py           # Parses knowledge-base/videos/*.md → frontend/src/data/videos.json
+├── gen-blogs.py            # Parses knowledge-base/blogs/*.md → frontend/src/data/blogs.json
+├── requirements.txt        # python-frontmatter, PyYAML
+├── requirements-dev.txt    # + pytest
+└── tests/
+    ├── test_gen_videos.py  # 26 pytest tests
+    └── test_gen_blogs.py   # 26 pytest tests
 ```
 
 ## Lambda Handler Pattern
