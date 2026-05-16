@@ -88,6 +88,8 @@ Chat widget needs `VITE_CHAT_API_URL` in **`frontend/.env`** — see [SETUP.md](
 - Default branch: **`main`**. Do not commit directly to `main` — use a feature branch and a PR (see [.claude/rules/workflow.md](.claude/rules/workflow.md)).
 - **Package manager:** `pnpm` only — no npm or yarn.
 
+> This project was built and implemented with [Claude Code](https://claude.ai/code) — Anthropic's agentic AI coding tool. The full prompt-by-prompt build log is in [`docs/prompts/`](docs/prompts/).
+
 ---
 
 ## Deployment
