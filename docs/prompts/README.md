@@ -47,3 +47,4 @@ prompts/
 | 15 | `session-15-ci-video-pipeline.md` | `feature/ci-video-pipeline` | Phase 3: wire generator into deploy.yml; expand frontend path trigger; add memory + prompts rules to /ship |
 | 16 | `session-16-blog-publishing-pipeline.md` | `feature/blog-publishing-pipeline` | Blog pipeline mirroring video pipeline: gen-blogs.py, blogs.json, BlogPost interface, BlogPage + HomePage wired |
 | 17 | `session-17-creator-identity-kb.md` | `knowledge-base/creator-identity-details` | Fix chatbot hallucination: chatbot was attributing site creation to "Matthew Berman"; added creator attribution to site-overview.md and created details.md with comprehensive creator identity content |
+| 18 | `session-18-fix-built-with-chatbot-live.md` | `fix/built-with-ai-chatbot-live` | Fix stale "Coming Soon" content on BuiltWithAIPage and knowledge-base/website/built-with-claude.md — chatbot has been live for weeks; replaced badge, updated copy, added 4 missing tech stack entries |
