@@ -1,6 +1,9 @@
 import ContentCard from '../components/ContentCard'
-import { videos } from '../data/videos'
+import videosData from '../data/videos.json'
 import { posts } from '../data/posts'
+import type { Video } from '../types/content'
+
+const videos = videosData as Video[]
 
 const YT_URL = 'https://www.youtube.com/@EverydayAITutor'
 
@@ -100,17 +103,26 @@ export default function HomePage() {
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-[28px] font-extrabold text-brand-navy mb-8">Latest Videos</h2>
           <div className="max-w-sm">
-            {latestVideos.map((video) => (
+            {latestVideos.length === 0 ? (
               <ContentCard
-                key={video.id}
-                title={video.title}
-                description={video.description}
-                publishDate={video.publishDate}
-                thumbnailUrl={video.thumbnailUrl}
-                linkUrl={video.youtubeUrl}
-                linkText="Watch on YouTube"
+                title="Coming Soon"
+                description="Our first video is on its way. Subscribe on YouTube to be notified."
+                linkUrl=""
+                linkText=""
               />
-            ))}
+            ) : (
+              latestVideos.map((video) => (
+                <ContentCard
+                  key={video.videoId}
+                  title={video.title}
+                  description={video.description}
+                  publishDate={video.publishDate}
+                  thumbnailUrl={`/thumbnails/video/${video.thumbnail}`}
+                  linkUrl={video.youtubeUrl}
+                  linkText="Watch on YouTube"
+                />
+              ))
+            )}
           </div>
         </div>
       </section>

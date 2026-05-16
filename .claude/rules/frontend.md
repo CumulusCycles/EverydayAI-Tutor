@@ -51,21 +51,28 @@ frontend/
 
 ## Content Data
 
-At launch, video and blog post content is stored as static TypeScript data files in `src/data/`.
+Video content is driven by `frontend/src/data/videos.json`, generated at build time by `tools/gen-videos.py` from `knowledge-base/videos/*.md`. A seed `[]` file is committed so the build works in a fresh checkout. CI overwrites it before building; locally run the generator after adding MD files.
 
 ```typescript
-// Example: src/data/videos.ts
+// frontend/src/types/content.ts
 export interface Video {
-  id: string;
-  title: string;
-  description: string;
-  publishDate: string;
-  thumbnailUrl: string;
-  youtubeUrl: string;
+  videoId: string       // matches MD filename and thumbnail filename
+  title: string
+  description: string
+  publishDate: string   // ISO YYYY-MM-DD
+  thumbnail: string     // filename only, e.g. "v_what_ai_actually_is.png"
+  youtubeUrl: string
 }
-
-export const videos: Video[] = [ ... ];
 ```
+
+Pages import the JSON and cast to `Video[]`:
+```typescript
+import videosData from '../data/videos.json'
+import type { Video } from '../types/content'
+const videos = videosData as Video[]
+```
+
+Thumbnail URLs are constructed in the page: `` `/thumbnails/video/${video.thumbnail}` ``
 
 ## Routing
 
