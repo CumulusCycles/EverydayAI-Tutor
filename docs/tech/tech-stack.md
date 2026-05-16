@@ -5,7 +5,7 @@
 
 ## Overview
 
-Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/CD via GitHub Actions.
+React site hosted on AWS with an AI chat assistant backed by Amazon Bedrock. Content (videos, blog posts) is authored in Markdown and synced automatically to the site and chatbot via CI — no code edits required to publish.
 
 ---
 
@@ -14,13 +14,17 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 ```
 /
 ├── frontend/          # React + Vite + TypeScript application
-├── infrastructure/    # AWS CDK TypeScript stack
-├── docs/              # Brand, design, and reference documentation
-│   ├── images/        # Brand image assets
-│   ├── brand.md       # Brand guide
-│   └── color-palette.md  # Brand color palette
-└── img/               # Favicon and root-level image assets
-    └── logo.ico
+├── infrastructure/    # AWS CDK TypeScript stack (site stack + chatbot stack)
+├── chatbot/
+│   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
+├── knowledge-base/    # Markdown synced to Bedrock S3 bucket via CI
+│   ├── website/       # General site content (about, FAQ, learning journey, etc.)
+│   ├── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+│   └── blogs/         # One MD file per blog post (future)
+├── tools/             # CI scripts — gen-videos.py generates frontend/src/data/videos.json
+├── docs/              # Brand, UX, tech docs, Claude Code prompt log
+├── .github/workflows/ # CI/CD — frontend, infrastructure, KB sync
+└── SETUP.md           # Full local + AWS + GitHub setup
 ```
 
 ---
@@ -29,12 +33,12 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 
 | Technology | Choice | Notes |
 |---|---|---|
-| Framework | React | Static site, no SSR required |
+| Framework | React | Client-side rendering |
 | Build Tool | Vite | Fast builds, outputs to `/dist` |
-| Language | TypeScript | Consistent with CDK infrastructure |
-| Styling | Tailwind CSS | Utility-first, consistent with modern React patterns |
+| Language | TypeScript | Strict mode, no `any` |
+| Styling | Tailwind CSS v4 | `@theme` in `index.css` — no `tailwind.config.ts` |
 | Routing | React Router | Client-side routing with clean URLs |
-| Package Manager | pnpm | Faster and more efficient than npm/yarn |
+| Package Manager | pnpm | Never npm or yarn |
 | Node Version | v25.2.1 | Homebrew-managed; pinned in GHA workflow to match dev machine |
 
 ---
@@ -44,7 +48,8 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 | Layer | Library | Notes |
 |---|---|---|
 | Unit & Component | Vitest + React Testing Library | Vite-native, Jest-compatible API |
-| End-to-End / Functional | Playwright | Real browser simulation |
+| End-to-End / Functional | Playwright | Real browser simulation; tests in `frontend/e2e/` |
+| Generator script | pytest | Tests in `tools/tests/` |
 
 ---
 
@@ -54,50 +59,102 @@ Static React website hosted on AWS, provisioned with CDK (TypeScript), with CI/C
 |---|---|
 | ESLint | Linting |
 | Prettier | Code formatting |
+| ruff | Python linting (`tools/`) |
 
 ---
 
 ## Infrastructure (AWS CDK — TypeScript)
 
-| Service | Purpose | Notes |
-|---|---|---|
-| S3 | Static site hosting | Hosts compiled `/dist` output |
-| CloudFront | CDN + HTTPS termination | Custom domain, caching, 403/404 → index.html redirect for React Router |
-| ACM | SSL Certificate | Provisioned in `us-east-1` (CloudFront requirement) |
-| Route 53 | DNS | Domain already registered via Route 53; hosted zone already exists — use `HostedZone.fromLookup()` |
-| SSM Parameter Store | Environment variables | Pattern established for future use; no frontend env vars required at launch |
+Two CDK stacks, both in `infrastructure/lib/`:
+
+### Site Stack (`stack.ts`)
+
+| Service | Purpose |
+|---|---|
+| S3 | Static site hosting — private bucket, CloudFront OAC |
+| CloudFront | CDN + HTTPS + 403/404 → `index.html` redirect for React Router |
+| ACM | SSL certificate in `us-east-1` (CloudFront requirement) — covers apex + www |
+| Route 53 | DNS — hosted zone already exists, use `HostedZone.fromLookup()` |
+| Bedrock Knowledge Base | S3 Vectors store + Titan Embeddings v2 — chatbot semantic search |
+| OIDC Provider | GitHub Actions auth — no long-lived AWS credentials |
+| GitHubActionsDeployRole | IAM role assumed per CI run via OIDC |
+
+### Chatbot Stack (`chatbot-stack.ts`)
+
+| Service | Purpose |
+|---|---|
+| API Gateway (HTTP API) | `POST /chat` endpoint — public, CORS-controlled |
+| Lambda (Python 3.13) | Thin handler + Bedrock `retrieve_and_generate` service |
+| IAM | `bedrock:RetrieveAndGenerate`, `bedrock:InvokeModel`, `bedrock:GetInferenceProfile`, `s3:GetObject` on KB bucket |
 
 ### Domain & Routing
-- `aieverydaytutor.com` — canonical URL, serves the site
+- `aieverydaytutor.com` — canonical, serves the site
 - `www.aieverydaytutor.com` — redirects to non-www canonical
-- ACM certificate covers both `aieverydaytutor.com` and `www.aieverydaytutor.com` (both as SANs)
-- CloudFront configured to redirect 403/404 → `index.html` for React Router client-side routing
+- CloudFront redirects 403/404 → `index.html` for React Router
 
 ### S3 Security
-- S3 bucket is **private** — no public access
-- CloudFront accesses S3 via **Origin Access Control (OAC)**
+- Site S3 bucket is **private** — CloudFront accesses via Origin Access Control (OAC)
 - Direct S3 URL access is blocked
 
-### CORS
-- CORS policy configured on S3/CloudFront for future API calls
-
-### Cache Invalidation
-- GHA invalidates `/*` on every frontend deploy
-- Counts as 1 path — first 1,000 invalidation paths per month are free
-
-
 ### IAM & Authentication
-- GitHub Actions authenticates with AWS via **OpenID Connect (OIDC)** — no long-lived credentials stored anywhere
-- OIDC provider and `GitHubActionsDeployRole` are provisioned in the CDK stack
-- GitHub Actions assumes the role per-run via `aws-actions/configure-aws-credentials`
-- Role policy is documented in `docs/tech/iam-policy.json` — grants permission to assume CDK bootstrap roles only
-- GitHub secrets required: `AWS_ROLE_ARN` and `AWS_REGION` only — never `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY`
+- GitHub Actions authenticates with AWS via **OIDC** — no long-lived credentials stored anywhere
+- OIDC provider and `GitHubActionsDeployRole` provisioned in the CDK site stack
+- GitHub secrets required: `AWS_ROLE_ARN`, `AWS_REGION`, `BEDROCK_KB_ID`, `KB_BUCKET_NAME`, `BEDROCK_DS_ID`, `VITE_CHAT_API_URL`
+- Never store `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY`
 
 ### CDK Bootstrap
-AWS account is already bootstrapped in `us-east-1` via existing `CDKToolkit` CloudFormation stack.
+AWS account is already bootstrapped in `us-east-1`. Do not run `cdk bootstrap` again.
 
-### Domain
-`aieverydaytutor.com` — registered through Route 53. Hosted zone exists, no creation required.
+---
+
+## Chatbot
+
+| Component | Detail |
+|---|---|
+| Trigger | API Gateway `POST /chat` |
+| Runtime | Python 3.13 Lambda |
+| AI | Amazon Bedrock `retrieve_and_generate` — RAG pattern |
+| Model | `global.anthropic.claude-sonnet-4-5-20250929-v1:0` (cross-region inference profile) |
+| Knowledge Base | S3 Vectors + Titan Embeddings v2 — content from `knowledge-base/` |
+| CORS | Enumerated `ALLOWED_ORIGINS` in `handler.py` — aieverydaytutor.com, www, localhost |
+
+---
+
+## Content Publishing Pipeline
+
+Video and blog content is authored as Markdown. CI handles the rest.
+
+| Step | What happens |
+|---|---|
+| Author commits MD + thumbnail | `knowledge-base/videos/<videoId>.md` + `frontend/public/thumbnails/video/<videoId>.png` |
+| Frontend CI job | `tools/gen-videos.py` parses all `knowledge-base/videos/*.md` → writes `frontend/src/data/videos.json` → `pnpm build` bundles it → S3 sync + CloudFront invalidation |
+| Knowledge-base CI job | `aws s3 sync --delete` → Bedrock ingestion job → chatbot KB updated |
+
+No DynamoDB. No runtime API. Video catalog is a static JSON file bundled at build time.
+
+---
+
+## CI/CD
+
+| Job | Trigger | Steps |
+|---|---|---|
+| Frontend | `frontend/**` or `knowledge-base/videos/**` or `tools/**` changed | Generate `videos.json` → `pnpm build` → S3 sync → CloudFront invalidation |
+| Infrastructure | `infrastructure/**` or `chatbot/**` changed | `cdk deploy --all` |
+| Knowledge-base | `knowledge-base/**` changed | S3 sync → Bedrock ingestion |
+
+All jobs authenticate via OIDC. No staging environment — production only.
+
+---
+
+## Environment Variables
+
+| Variable | Where used | Notes |
+|---|---|---|
+| `VITE_CHAT_API_URL` | Frontend build-time | Baked into bundle by Vite; set in GitHub secrets |
+| `KB_ID` | Lambda runtime | Bedrock KB ID — set by CDK from `BEDROCK_KB_ID` secret |
+| `BEDROCK_KB_ID` | CI / CDK synth | Injected at `cdk deploy` time |
+| `KB_BUCKET_NAME` | CI / CDK synth | Injected at `cdk deploy` time |
+| `BEDROCK_DS_ID` | CI | Used by KB sync job to start ingestion |
 
 ---
 
@@ -106,71 +163,18 @@ AWS account is already bootstrapped in `us-east-1` via existing `CDKToolkit` Clo
 | | |
 |---|---|
 | URL | `https://github.com/CumulusCycles/EverydayAI-Tutor` |
-| Visibility | Private (will be made public at launch) |
-| Structure | Monorepo — frontend, infrastructure, and docs in one repo |
+| Visibility | Public |
+| Structure | Monorepo — frontend, infrastructure, chatbot, tools, docs |
 
 ---
 
 ## GitHub Access (Claude Code)
 
-Claude Code uses a Fine-Grained Personal Access Token (PAT) to create feature branches, push to remote, and open PRs for review before merging to `main`.
+Claude Code uses a Fine-Grained Personal Access Token (PAT) to create feature branches, push to remote, and open PRs.
 
-**PAT Permissions:**
-- `Contents` — Read and Write
-- `Pull requests` — Read and Write
-- `Workflows` — Read and Write
-- `Commit statuses` — Read
-- `Metadata` — Read (auto-selected)
+**PAT Permissions:** `Contents` R/W, `Pull requests` R/W, `Workflows` R/W, `Commit statuses` R, `Metadata` R
 
-**Local configuration:**
-- PAT stored in `.env` at repo root as `GITHUB_TOKEN=your_pat_here`
-- `.env` is gitignored — never committed to the repo
-
----
-
-
-
-## CI/CD
-
-| Tool | GitHub Actions |
-|---|---|
-| Trigger | Push to `main` branch |
-| Authentication | OIDC — GitHub Actions assumes `GitHubActionsDeployRole` via `aws-actions/configure-aws-credentials` |
-| Frontend job | `pnpm install` → `pnpm build` → sync `/dist` to S3 → CloudFront cache invalidation |
-| Infrastructure job | `cdk deploy` (path-filtered — only runs if files in `/infrastructure` changed) |
-| Path filtering | Frontend and infrastructure jobs run independently based on changed paths |
-| Environments | Production only (no staging environment at launch) |
-
----
-
-## Environment Variables
-
-- Vite environment variables use the `VITE_` prefix and are baked into the build at compile time
-- Sensitive values must never be included in the frontend bundle
-- AWS SSM Parameter Store is the established pattern for secrets and configuration — to be used when backend functionality (Lambda, etc.) is added
-
----
-
-## Future Considerations (Out of Scope at Launch)
-
-The following are intentionally excluded from the initial build but are natural next steps as the site grows:
-
-### Backend & Data Layer
-- **DynamoDB** — structured content storage (blog posts, YouTube video titles, descriptions, publish dates, URLs, tags)
-- **Lambda functions / API Gateway** — all Lambdas to be written in Python
-
-### Agentic Search
-Semantic natural language search across blog posts and YouTube video content.
-
-See `agentic-search-flow.md` for architecture diagram.
-
-**Components:**
-- **DynamoDB** — source of truth for all content metadata
-- **DynamoDB Streams** — triggers on new/updated content
-- **Lambda (Python)** — syncs new/updated content to Bedrock Knowledge Base
-- **AWS Bedrock Knowledge Base** — semantic search index (vector embeddings)
-- **S3 Vectors** — vector store (serverless, pay-per-use, up to 90% cheaper than specialized vector databases)
-- **Lambda (Python)** — handles search queries, calls Bedrock Knowledge Base, returns results to frontend
+**Local configuration:** PAT stored in `.env` at repo root as `GITHUB_TOKEN=your_pat_here` — gitignored, never committed.
 
 ---
 
@@ -180,5 +184,5 @@ See `agentic-search-flow.md` for architecture diagram.
 |---|---|
 | Hardware | Apple M1 Mac Studio |
 | Node | v25.2.1 (Homebrew-managed) |
-| npm | v11.14.1 |
 | pnpm | v11.0.9 |
+| Python | 3.13 (uv for venv management) |

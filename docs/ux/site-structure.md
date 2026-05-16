@@ -21,7 +21,9 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 | Videos | `/videos` | Full card listing of playlists and videos |
 | Blog | `/blog` | Full card listing of blog posts |
 | About | `/about` | Channel mission, host background, what viewers will learn |
-| Privacy Policy | `/privacy` | Minimal privacy statement — no personal data collected at launch |
+| Built with AI | `/built-with` | How the site was built using Claude Code and AWS |
+| Privacy Policy | `/privacy` | Minimal privacy statement — no personal data collected |
+| Not Found | `*` | 404 fallback page |
 
 ---
 
@@ -158,9 +160,9 @@ Cards open external links in a new tab.
 
 #### Content
 - We do not currently collect any personal information
-- No analytics or tracking at launch
+- No analytics or tracking
 - No cookies beyond what is technically necessary
-- Policy will be updated when user registration and authentication are added
+- Policy will be updated if new features require data collection
 - Contact information for privacy questions
 
 #### Notes
@@ -193,14 +195,15 @@ Cards open external links in a new tab.
 
 ## Content Management
 
-At launch, video and blog post content is managed as static data — no CMS or database.
+Content is authored as Markdown files in `knowledge-base/` — no CMS, no database, no code edits to publish.
 
-| Content Type | Storage | Notes |
+| Content Type | Source | How it reaches the site |
 |---|---|---|
-| Videos / Playlists | Static data file (TypeScript) | Updated manually as new videos are published |
-| Blog Posts | Static data file (TypeScript) | Updated manually as new posts are published |
+| Videos | `knowledge-base/videos/<videoId>.md` | CI runs `tools/gen-videos.py` → generates `frontend/src/data/videos.json` → bundled by Vite |
+| Blog Posts | `knowledge-base/blogs/<postId>.md` | Same pipeline (future — not yet implemented) |
+| Chatbot KB | All `knowledge-base/**` MD files | CI syncs to Bedrock S3 bucket → ingestion job updates vector store |
 
-Future enhancement: DynamoDB as content store, with Bedrock Knowledge Base for agentic search.
+To publish a new video: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest. See `docs/runbooks/New_Video.md` for the full workflow.
 
 ---
 
