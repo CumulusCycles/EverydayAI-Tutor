@@ -16,15 +16,9 @@ Phase 3 of the video publishing pipeline: wire `tools/gen-videos.py` into the Gi
 
 ### Prompt 1
 
-> ALSO: we need to ensure the prompts/* files are up-to-date! Do we need to add that to a rule?
-
-Identified that sessions 14 and 15 were missing from `docs/prompts/`. Also confirmed that the prompts update step had no enforcement in the workflow — only memory had an explicit "before every ship" rule.
-
-### Prompt 2
-
 > do it
 
-*(In context of: "start Phase 3 and add the memory rule")*
+*(In context of: "start Phase 3 CI integration and add the memory update rule to /ship")*
 
 **`deploy.yml` changes:**
 
@@ -60,12 +54,26 @@ Identified that sessions 14 and 15 were missing from `docs/prompts/`. Also confi
 - Added step 2: "Update project memory (`project_scaffold.md` + `MEMORY.md`) before committing"
 - Steps renumbered accordingly
 
+### Prompt 2
+
+> ALSO: we need to ensure the prompts/* files are up-to-date! Do we need to add that to a rule?
+
+Identified that sessions 14 and 15 were missing from `docs/prompts/`. Confirmed that the prompts update step had no enforcement in the workflow — only memory had an explicit "before every ship" rule.
+
 **`docs/prompts/` changes:**
 
 - Created `session-14-frontend-videos-json.md`
 - Created `session-15-ci-video-pipeline.md` (this file)
 - Updated `docs/prompts/README.md` sessions table (rows 14–15)
-- Added prompts update to `.claude/rules/workflow.md` "Before every ship" section and `.claude/skills/ship/SKILL.md`
+
+**`.claude/rules/workflow.md` changes (additional):**
+
+- Added "Keeping Prompts Current" section alongside "Keeping Memory Current"
+
+**`.claude/skills/ship/SKILL.md` changes (additional):**
+
+- Added step 3: "Update the prompts log — add or verify session file exists; add README row if missing"
+- Steps renumbered accordingly
 
 ### Result
 
