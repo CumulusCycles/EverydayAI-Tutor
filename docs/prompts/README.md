@@ -46,3 +46,4 @@ prompts/
 | 14 | `session-14-frontend-videos-json.md` | `feature/frontend-videos-json` | Phase 2: replace `videos.ts` with `videos.json` import; update Video interface; wire HomePage + VideosPage |
 | 15 | `session-15-ci-video-pipeline.md` | `feature/ci-video-pipeline` | Phase 3: wire generator into deploy.yml; expand frontend path trigger; add memory + prompts rules to /ship |
 | 16 | `session-16-blog-publishing-pipeline.md` | `feature/blog-publishing-pipeline` | Blog pipeline mirroring video pipeline: gen-blogs.py, blogs.json, BlogPost interface, BlogPage + HomePage wired |
+| 17 | `session-17-creator-identity-kb.md` | `knowledge-base/creator-identity-details` | Fix chatbot hallucination: chatbot was attributing site creation to "Matthew Berman"; added creator attribution to site-overview.md and created details.md with comprehensive creator identity content |
