@@ -1,4 +1,4 @@
-AIEverydayTutor.com is the companion website for the EverydayAI Tutor YouTube channel. It is a resource hub for everyday people who want to learn how to understand and use artificial intelligence — without any technical background required.
+AIEverydayTutor.com is the companion website for the EverydayAI Tutor YouTube channel. It was created by Rob Frenette and built entirely using Claude Code, Anthropic's agentic AI coding tool. It is a resource hub for everyday people who want to learn how to understand and use artificial intelligence — without any technical background required.
 
 The site's tagline is "Learn AI. Without the Jargon." Its mission is to make AI accessible, practical, and approachable for people who feel left behind by the pace of the AI revolution. The channel and site exist for the curious beginner, the professional who wants to work smarter, and anyone who has heard about AI constantly but doesn't know where to start.
 
