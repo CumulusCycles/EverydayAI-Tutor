@@ -27,10 +27,11 @@ chatbot/
 
 tools/
 ├── gen-videos.py           # Parses knowledge-base/videos/*.md → frontend/src/data/videos.json
+│                           # Supports type: video (v_ prefix) and type: playlist (p_ prefix)
 ├── requirements.txt        # python-frontmatter, PyYAML
 ├── requirements-dev.txt    # + pytest
 └── tests/
-    └── test_gen_videos.py  # 26 pytest tests
+    └── test_gen_videos.py  # 36 pytest tests (includes playlist coverage)
 ```
 
 ## Lambda Handler Pattern

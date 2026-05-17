@@ -2,7 +2,7 @@ AIEverydayTutor.com is the companion website for the EverydayAI Tutor YouTube ch
 
 The site's tagline is "Learn AI. Without the Jargon." Its mission is to make AI accessible, practical, and approachable for people who feel left behind by the pace of the AI revolution. The channel and site exist for the curious beginner, the professional who wants to work smarter, and anyone who has heard about AI constantly but doesn't know where to start.
 
-Visitors to the site can browse the latest videos from the YouTube channel, learn about the channel's host and mission, and find out how the site itself was built using AI tools.
+Visitors to the site can browse the latest videos and playlists from the YouTube channel, learn about the channel's host and mission, and find out how the site itself was built using AI tools.
 
 The YouTube channel is at https://www.youtube.com/@EverydayAITutor. Subscribing is free and requires no sign-up.
 

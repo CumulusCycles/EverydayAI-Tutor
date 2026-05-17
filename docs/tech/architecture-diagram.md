@@ -187,7 +187,7 @@ flowchart LR
 
 | Decision | Choice | Reason |
 |---|---|---|
-| Content source of truth | Markdown files in `knowledge-base/` | Single file per video, git-versioned, drives both frontend cards and chatbot KB |
+| Content source of truth | Markdown files in `knowledge-base/` | Single file per video or playlist, git-versioned, drives both frontend cards and chatbot KB |
 | Frontend content catalog | Static JSON (videos.json) | Build-time generation — no runtime API, no failure modes, free at any scale |
 | Chatbot search index | Bedrock Knowledge Base | Semantic search, natural language queries, managed embeddings |
 | Vector store | S3 Vectors | Native AWS vector store — no separate service to manage |

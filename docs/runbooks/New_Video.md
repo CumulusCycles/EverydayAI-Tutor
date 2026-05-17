@@ -1,39 +1,31 @@
-# Implementation Spec — Video Publishing Pipeline
+# Publishing Runbook — Videos and Playlists
 
 > **Approach:** Build-time static generation. MD files are the source of truth. A CI script
 > parses frontmatter and generates a static JSON file that Vite bundles into the site.
 > No DynamoDB, no new Lambda, no new CDK stack, no runtime API.
 >
-> **Audience:** an AI coding agent (or human engineer) implementing this from scratch.
->
-> **Before writing code:** read `.claude/rules/` (especially `frontend.md`, `chatbot.md`,
-> `testing.md`) and `CLAUDE.md`. This spec is additive to those conventions.
->
-> **Status:** none of the code described here exists yet. The site currently renders cards
-> from a hardcoded `frontend/src/data/videos.ts` static file.
->
-> **Why this approach over v1 (DynamoDB + Lambda):** the video catalog is small (tens of
-> items), authored by one person, and changes only on publish. A runtime API adds
-> infrastructure cost and a failure mode (cards go blank if the API is down) for no
-> benefit at this scale. A static JSON file bundled at build time is simpler, cheaper,
-> faster, and equally maintainable.
+> Videos and playlists share the same pipeline and JSON schema. The `type` field
+> distinguishes them. Video IDs use the `v_` prefix; playlist IDs use the `p_` prefix.
 
 ---
 
-## 1. What the site owner does to publish a video
+## 1. Publishing a video or playlist
 
-After publishing on YouTube and having the following ready:
-- Video title
-- Description (1–2 sentence blurb)
-- Publish date
-- Thumbnail image (PNG, 1280×720)
-- YouTube URL (full `https://www.youtube.com/watch?v=...` format — no short URLs)
+### Video
 
+After publishing on YouTube:
 1. Create a feature branch: `git checkout -b feat/video-<videoId>`
 2. Add the thumbnail: `frontend/public/thumbnails/video/<videoId>.png`
-3. Add the MD file: `knowledge-base/videos/<videoId>.md` (see §3 for format)
+3. Add the MD file: `knowledge-base/videos/<videoId>.md` with `type: video` (or omit — defaults to video)
 4. Open a PR with `/ship` → merge to `main`
-5. CI generates the video catalog, builds the site, and syncs the chatbot KB — done
+
+### Playlist
+
+After creating the playlist on YouTube:
+1. Create a feature branch: `git checkout -b feat/playlist-<playlistId>`
+2. Add the thumbnail: `frontend/public/thumbnails/video/<playlistId>.png`
+3. Add the MD file: `knowledge-base/videos/<playlistId>.md` with `type: playlist`
+4. Open a PR with `/ship` → merge to `main`
 
 One branch. Two files. No code edits. No TypeScript to touch.
 
@@ -72,6 +64,7 @@ bundled into the Vite build. No API call at page load. No new AWS resources.
 
 ### 3.1 Template
 
+**Video:**
 ```markdown
 ---
 videoId:     v_what_ai_actually_is
@@ -80,6 +73,20 @@ description: "Traditional AI, Generative AI, and Agentic AI — explained simply
 publishDate: 2026-05-15
 thumbnail:   v_what_ai_actually_is.png
 youtubeUrl:  https://www.youtube.com/watch?v=AbC123XyZ
+type:        video
+---
+```
+
+**Playlist:**
+```markdown
+---
+videoId:     p_beginner_series
+title:       "Beginner AI Series"
+description: "Start here — everything you need to go from curious to confident with AI."
+publishDate: 2026-05-15
+thumbnail:   p_beginner_series.png
+youtubeUrl:  https://www.youtube.com/playlist?list=PLAbC123XyZ
+type:        playlist
 ---
 
 Watch this video at https://www.youtube.com/watch?v=AbC123XyZ.
@@ -112,12 +119,13 @@ All fields are required. The CI script fails the build on any missing or malform
 
 | Field         | Type   | Constraints                                                                                          |
 |---------------|--------|------------------------------------------------------------------------------------------------------|
-| `videoId`     | string | Lowercase snake_case, prefixed `v_`. Must match the filename without `.md`. Stable forever — it becomes the React `key` and the thumbnail filename. |
-| `title`       | string | Plain text. Quote if it contains `:` followed by a space (common in titles).                        |
+| `videoId`     | string | Lowercase snake_case. **Videos:** `v_` prefix. **Playlists:** `p_` prefix. Must match filename. Stable forever — used as React `key` and thumbnail filename. |
+| `title`       | string | Plain text. Quote if it contains `:` followed by a space.                                           |
 | `description` | string | 1–2 sentence marketing blurb. Plain text.                                                            |
 | `publishDate` | string | ISO date `YYYY-MM-DD`.                                                                               |
 | `thumbnail`   | string | Filename only (no path). Must equal `<videoId>.png` and exist at `frontend/public/thumbnails/video/`. |
-| `youtubeUrl`  | string | Must match `^https://www\.youtube\.com/watch\?v=[A-Za-z0-9_-]{11}$`. Strip trailing params (`&t=`, `&list=`, etc.). No `youtu.be/` short URLs. |
+| `youtubeUrl`  | string | **Videos:** `https://www.youtube.com/watch?v=<11-char-id>`. **Playlists:** `https://www.youtube.com/playlist?list=<id>`. No short URLs. |
+| `type`        | string | `video` or `playlist`. Optional — defaults to `video` if omitted.                                   |
 
 **YAML quoting:** wrap any value containing `: ` (colon-space), `#`, or leading special
 characters in double quotes. When in doubt, quote it — harmless if unnecessary.

@@ -53,37 +53,40 @@ frontend/
 
 ## Content Data
 
-Videos follow this pipeline: Markdown frontmatter in `knowledge-base/videos/` → Python generator → static JSON → Vite bundles at build time. A seed `[]` file is committed so fresh checkouts build without running the generator. CI overwrites it before building.
+Videos and playlists follow this pipeline: Markdown frontmatter in `knowledge-base/videos/` → Python generator → static JSON → Vite bundles at build time. Seed `[]` files are committed so fresh checkouts build without running the generators. CI overwrites them before building.
 
 ```typescript
 // frontend/src/types/content.ts
 export interface Video {
-  videoId: string       // matches MD filename and thumbnail filename
+  videoId: string       // matches MD filename and thumbnail filename; v_ prefix for videos, p_ for playlists
   title: string
   description: string
   publishDate: string   // ISO YYYY-MM-DD
   thumbnail: string     // filename only, e.g. "v_what_ai_actually_is.png"
   youtubeUrl: string
+  type: 'video' | 'playlist'
 }
 ```
 
-Pages import JSON and cast to the appropriate type:
+Pages import JSON and cast to the appropriate type, then filter by `type`:
 ```typescript
 import videosData from '../data/videos.json'
 import type { Video } from '../types/content'
-const videos = videosData as Video[]
+const allItems = videosData as Video[]
+const videos = allItems.filter((item) => item.type !== 'playlist')
+const playlists = allItems.filter((item) => item.type === 'playlist')
 ```
 
-Thumbnail URLs are constructed in the page:
-- Videos: `` `/thumbnails/video/${video.thumbnail}` ``
+Thumbnail URLs are constructed in the page (same path for both types):
+- Videos and playlists: `` `/thumbnails/video/${item.thumbnail}` ``
 
 ## Routing
 
-| Route | Page Component |
-|---|---|
-| `/` | `HomePage` |
-| `/videos` | `VideosPage` |
-| `/about` | `AboutPage` |
+| Route | Page Component | Notes |
+|---|---|---|
+| `/` | `HomePage` | Shows latest video + latest playlist |
+| `/videos` | `VideosPage` | Videos grid + Playlists section |
+| `/about` | `AboutPage` | |
 | `/built-with` | `BuiltWithAIPage` |
 | `/privacy` | `PrivacyPage` |
 | `*` | `NotFound` |
