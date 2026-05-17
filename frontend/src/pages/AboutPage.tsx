@@ -112,49 +112,56 @@ export default function AboutPage() {
       {/* Host */}
       <section className="py-16 px-6 md:px-12 bg-brand-white">
         <div className="max-w-[1200px] mx-auto">
-          <div className="max-w-2xl">
-            <h2 className="text-[28px] font-extrabold text-brand-navy mb-6">The Host</h2>
-            <p className="text-brand-charcoal leading-relaxed mb-4">
-              I'm{' '}
-              <a
-                href="https://www.linkedin.com/in/robertmfrenette"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-orange font-semibold hover:underline"
-              >
-                Rob Frenette
-              </a>{' '}
-              — a full-stack developer, cloud engineer, and educator with a passion for making
-              complex technology accessible to everyday people.
-            </p>
-            <p className="text-brand-charcoal leading-relaxed mb-4">
-              By day I design and build full-stack applications, deployed on AWS cloud
-              infrastructure. By night I build things like this — because I believe the best way to
-              learn something deeply is to teach it clearly.
-            </p>
-            <p className="text-brand-charcoal leading-relaxed mb-4">
-              As an AWS Community Builder in AI Engineering, I stay at the edge of what's possible
-              with cloud and AI. I also run{' '}
-              <a
-                href="https://www.youtube.com/@CumulusCycles"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-orange font-semibold hover:underline"
-              >
-                Cumulus Cycles
-              </a>{' '}
-              — a YouTube channel covering AWS cloud development and AI engineering tutorials for
-              developers.
-            </p>
-            <p className="text-brand-charcoal leading-relaxed mb-4">
-              EverydayAI Tutor was born from a simple observation: AI is transforming how we work
-              and live, but most of the educational content out there assumes you're already
-              technical. I built this channel for everyone else.
-            </p>
-            <p className="text-brand-charcoal leading-relaxed">
-              No jargon. No hype. Just honest, practical guidance — from someone who builds with
-              these tools every day.
-            </p>
+          <h2 className="text-[28px] font-extrabold text-brand-navy mb-8">The Host</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            <img
+              src="/images/rob.png"
+              alt="Rob Frenette at his workspace"
+              className="w-full rounded-xl shadow-sm"
+            />
+            <div>
+              <p className="text-brand-charcoal leading-relaxed mb-4">
+                I'm{' '}
+                <a
+                  href="https://www.linkedin.com/in/robertmfrenette"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange font-semibold hover:underline"
+                >
+                  Rob Frenette
+                </a>{' '}
+                — a full-stack developer, cloud engineer, and educator with a passion for making
+                complex technology accessible to everyday people.
+              </p>
+              <p className="text-brand-charcoal leading-relaxed mb-4">
+                By day I design and build full-stack applications, deployed on AWS cloud
+                infrastructure. By night I build things like this — because I believe the best way
+                to learn something deeply is to teach it clearly.
+              </p>
+              <p className="text-brand-charcoal leading-relaxed mb-4">
+                As an AWS Community Builder in AI Engineering, I stay at the edge of what's possible
+                with cloud and AI. I also run{' '}
+                <a
+                  href="https://www.youtube.com/@CumulusCycles"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange font-semibold hover:underline"
+                >
+                  Cumulus Cycles
+                </a>{' '}
+                — a YouTube channel covering AWS cloud development and AI engineering tutorials for
+                developers.
+              </p>
+              <p className="text-brand-charcoal leading-relaxed mb-4">
+                EverydayAI Tutor was born from a simple observation: AI is transforming how we work
+                and live, but most of the educational content out there assumes you're already
+                technical. I built this channel for everyone else.
+              </p>
+              <p className="text-brand-charcoal leading-relaxed">
+                No jargon. No hype. Just honest, practical guidance — from someone who builds with
+                these tools every day.
+              </p>
+            </div>
           </div>
         </div>
       </section>
