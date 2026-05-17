@@ -27,12 +27,10 @@ chatbot/
 
 tools/
 ├── gen-videos.py           # Parses knowledge-base/videos/*.md → frontend/src/data/videos.json
-├── gen-blogs.py            # Parses knowledge-base/blogs/*.md → frontend/src/data/blogs.json
 ├── requirements.txt        # python-frontmatter, PyYAML
 ├── requirements-dev.txt    # + pytest
 └── tests/
-    ├── test_gen_videos.py  # 26 pytest tests
-    └── test_gen_blogs.py   # 26 pytest tests
+    └── test_gen_videos.py  # 26 pytest tests
 ```
 
 ## Lambda Handler Pattern

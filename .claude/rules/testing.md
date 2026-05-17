@@ -52,7 +52,7 @@ pnpm exec playwright test
 
 - All page routes render without errors
 - Navigation links work correctly
-- Video and blog cards render with correct content
+- Video cards render with correct content
 - External links have correct `target="_blank"` and `rel="noopener noreferrer"`
 - Subscribe CTA buttons link to the correct YouTube URL
 - 404 / unknown routes redirect correctly

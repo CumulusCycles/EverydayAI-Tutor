@@ -3,7 +3,7 @@
 ## Overview
 
 AIEverydayTutor.com is a static channel hub for the EverydayAI Tutor YouTube channel.
-It showcases videos, playlists, and blog posts for people learning AI — no technical background required.
+It showcases videos and playlists for people learning AI — no technical background required.
 
 ## Repo Structure
 
@@ -15,14 +15,13 @@ It showcases videos, playlists, and blog posts for people learning AI — no tec
 │   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
 ├── knowledge-base/    # Markdown files synced to Bedrock S3 bucket via CI
 │   ├── website/       # General site content (about, FAQ, learning journey, etc.)
-│   ├── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
-│   └── blogs/         # One MD file per blog post — frontmatter drives cards, prose drives chatbot
-├── tools/             # CI scripts — gen-videos.py and gen-blogs.py generate static JSON at build time
+│   └── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+├── tools/             # CI scripts — gen-videos.py generates static JSON at build time
 └── docs/              # All project documentation
     ├── branding/      # Brand guide, color palette, image assets
     ├── tech/          # Tech stack, architecture diagrams
     ├── ux/            # Site structure, homepage mockup
-    ├── runbooks/      # Operational runbooks — New_Video.md, New_Blog.md
+    ├── runbooks/      # Operational runbooks — New_Video.md
     └── prompts/       # Claude Code prompt log — pedagogical record only, do not use for context
 ```
 
@@ -57,7 +56,7 @@ When using an MCP server, always announce it before making the call:
 
 The site is live with a working chatbot backend. No authentication, no database.
 
-- Video and blog post content is managed as static TypeScript data files in `frontend/src/data/`
+- Video content is managed as static JSON data files in `frontend/src/data/`
 - Chatbot is live: API Gateway → Python Lambda → Bedrock Knowledge Base (RAG)
 - Knowledge base content lives in `knowledge-base/` as Markdown; CI syncs to Bedrock on push to main
 - No CMS, no user accounts, no newsletter — out of scope

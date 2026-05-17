@@ -22,10 +22,6 @@ Where can I find the videos?
 
 Videos are available on the EverydayAI Tutor YouTube channel at https://www.youtube.com/@EverydayAITutor. The site's Videos page also lists the latest releases.
 
-Where can I find the blog posts?
-
-Blog posts are listed on the Blog page at aieverydaytutor.com/blog. New posts will be added as the channel grows.
-
 How can I stay updated on new content?
 
 Subscribe to the YouTube channel at https://www.youtube.com/@EverydayAITutor. Subscribing is free and requires no sign-up on this site. YouTube will notify you when new videos are published.

@@ -19,11 +19,10 @@ describe('Navbar', () => {
     expect(logoImg.closest('a')).toHaveAttribute('href', '/')
   })
 
-  it('renders all five navigation links', () => {
+  it('renders all four navigation links', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Videos' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Built with AI' })).toBeInTheDocument()
   })

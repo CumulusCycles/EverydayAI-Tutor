@@ -5,7 +5,6 @@ import ScrollToTop from './components/ScrollToTop'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import VideosPage from './pages/VideosPage'
-import BlogPage from './pages/BlogPage'
 import AboutPage from './pages/AboutPage'
 import BuiltWithAIPage from './pages/BuiltWithAIPage'
 import PrivacyPage from './pages/PrivacyPage'
@@ -19,7 +18,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/videos" element={<VideosPage />} />
-          <Route path="/blog" element={<BlogPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/built-with" element={<BuiltWithAIPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

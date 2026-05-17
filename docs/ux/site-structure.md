@@ -5,9 +5,9 @@
 
 ## Overview
 
-AIEverydayTutor.com is a channel hub — a clean, branded landing site that introduces the EverydayAI Tutor YouTube channel, showcases videos and playlists, and lists blog posts published across external platforms.
+AIEverydayTutor.com is a channel hub — a clean, branded landing site that introduces the EverydayAI Tutor YouTube channel and showcases videos.
 
-**Primary purpose at launch:** Present the EverydayAI Tutor brand and content in one place, with clear pathways to external content (YouTube, blog platforms).
+**Primary purpose at launch:** Present the EverydayAI Tutor brand and content in one place, with clear pathways to external content (YouTube).
 
 **Primary CTA across the site:** Subscribe to the YouTube channel.
 
@@ -17,9 +17,8 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 
 | Page | Route | Description |
 |---|---|---|
-| Home | `/` | Hero, channel intro, latest videos, latest blog posts, subscribe CTA |
+| Home | `/` | Hero, channel intro, latest videos, subscribe CTA |
 | Videos | `/videos` | Full card listing of playlists and videos |
-| Blog | `/blog` | Full card listing of blog posts |
 | About | `/about` | Channel mission, host background, what viewers will learn |
 | Built with AI | `/built-with` | How the site was built using Claude Code and AWS |
 | Privacy Policy | `/privacy` | Minimal privacy statement — no personal data collected |
@@ -31,7 +30,7 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 
 ### Top Nav
 - **Left:** Logo (links to Home)
-- **Center:** Home, Videos, Blog, About
+- **Center:** Home, Videos, About
 - **Right:** Subscribe button (orange, CTA style) → `https://www.youtube.com/@EverydayAITutor`
 
 ### Mobile
@@ -43,15 +42,15 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 ## Shared Components
 
 ### ContentCard
-Reusable card component used on both Videos and Blog pages (and previews on Home).
+Reusable card component used on the Videos page and previews on Home.
 
 | Field | Description |
 |---|---|
 | Thumbnail | Image |
-| Title | Post or video title |
+| Title | Video title |
 | Description | Short description or excerpt |
 | Publish Date | Date published |
-| External Link | Links out to YouTube video/playlist or blog platform post |
+| External Link | Links out to YouTube video/playlist |
 
 Cards open external links in a new tab.
 
@@ -83,12 +82,7 @@ Cards open external links in a new tab.
 - 3 most recent ContentCards
 - "View All Videos" link → `/videos`
 
-**4. Latest Blog Posts**
-- Section heading: "Latest Posts"
-- 3 most recent ContentCards
-- "View All Posts" link → `/blog`
-
-**5. Subscribe CTA Banner**
+**4. Subscribe CTA Banner**
 - Full-width section
 - "Ready to start learning AI?" or similar
 - Subscribe button → YouTube channel
@@ -109,24 +103,6 @@ Cards open external links in a new tab.
 - Full listing of all videos/playlists as ContentCards
 - Ordered by publish date (newest first)
 - Each card links to YouTube video or playlist
-
----
-
-### Blog `/blog`
-
-**Goal:** Showcase all blog posts in a clean, browsable card grid with links to external platforms.
-
-#### Sections
-
-**1. Page Header**
-- Title: "Blog"
-- Short intro: "Articles, guides, and practical tips on using AI in everyday life."
-
-**2. Blog Card Grid**
-- Full listing of all blog posts as ContentCards
-- Ordered by publish date (newest first)
-- Each card links to the external blog post (Medium, Substack, etc.)
-- Opens in new tab
 
 ---
 
@@ -181,7 +157,7 @@ Cards open external links in a new tab.
 - Tagline: "Practical AI for Everyday People"
 
 **Center:**
-- Nav links: Home, Videos, Blog, About
+- Nav links: Home, Videos, About
 
 **Right:**
 - Subscribe button/link → `https://www.youtube.com/@EverydayAITutor`
@@ -200,12 +176,10 @@ Content is authored as Markdown files in `knowledge-base/` — no CMS, no databa
 | Content Type | Source | How it reaches the site |
 |---|---|---|
 | Videos | `knowledge-base/videos/<videoId>.md` | CI runs `tools/gen-videos.py` → generates `frontend/src/data/videos.json` → bundled by Vite |
-| Blog Posts | `knowledge-base/blogs/<postId>.md` | CI runs `tools/gen-blogs.py` → generates `frontend/src/data/blogs.json` → bundled by Vite |
 | Chatbot KB | All `knowledge-base/**` MD files | CI syncs to Bedrock S3 bucket → ingestion job updates vector store |
 
-To publish new content: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest.
+To publish a new video: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest.
 - Videos: see `docs/runbooks/New_Video.md`
-- Blog posts: see `docs/runbooks/New_Blog.md`
 
 ---
 
@@ -214,6 +188,5 @@ To publish new content: commit the MD file + thumbnail PNG, open a PR, merge. CI
 | Destination | URL |
 |---|---|
 | YouTube Channel | `https://www.youtube.com/@EverydayAITutor` |
-| Blog posts | Various external platforms (Medium, Substack, etc.) |
 
 All external links open in a new tab (`target="_blank"` with `rel="noopener noreferrer"`).

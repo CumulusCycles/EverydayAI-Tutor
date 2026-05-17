@@ -11,15 +11,6 @@ const mockVideo = {
   youtubeUrl: 'https://www.youtube.com/watch?v=abc123',
 }
 
-const mockPost = {
-  postId: 'b_test-post',
-  title: 'Test Post',
-  description: 'A test blog post description.',
-  publishDate: '2026-05-16',
-  postUrl: 'https://example.com/test-post',
-  thumbnail: 'b_test-post.png',
-}
-
 async function renderPage() {
   const { default: HomePage } = await import('./HomePage')
   return render(
@@ -29,11 +20,10 @@ async function renderPage() {
   )
 }
 
-describe('HomePage — both empty', () => {
+describe('HomePage — videos empty', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.doMock('../data/videos.json', () => ({ default: [] }))
-    vi.doMock('../data/blogs.json', () => ({ default: [] }))
   })
 
   it('renders the main heading', async () => {
@@ -55,18 +45,12 @@ describe('HomePage — both empty', () => {
     await renderPage()
     expect(screen.getByText(/Our first video is on its way/i)).toBeInTheDocument()
   })
-
-  it('renders blog empty state when no posts', async () => {
-    await renderPage()
-    expect(screen.getByText(/New articles and guides are on the way/i)).toBeInTheDocument()
-  })
 })
 
-describe('HomePage — videos populated, blogs empty', () => {
+describe('HomePage — videos populated', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.doMock('../data/videos.json', () => ({ default: [mockVideo] }))
-    vi.doMock('../data/blogs.json', () => ({ default: [] }))
   })
 
   it('renders the latest video title', async () => {
@@ -87,43 +71,5 @@ describe('HomePage — videos populated, blogs empty', () => {
     const imgs = screen.getAllByRole('img')
     const thumbnail = imgs.find((img) => img.getAttribute('src')?.includes('/thumbnails/video/'))
     expect(thumbnail).toHaveAttribute('src', '/thumbnails/video/v_test-video.png')
-  })
-
-  it('still renders blog empty state', async () => {
-    await renderPage()
-    expect(screen.getByText(/New articles and guides are on the way/i)).toBeInTheDocument()
-  })
-})
-
-describe('HomePage — blogs populated, videos empty', () => {
-  beforeEach(() => {
-    vi.resetModules()
-    vi.doMock('../data/videos.json', () => ({ default: [] }))
-    vi.doMock('../data/blogs.json', () => ({ default: [mockPost] }))
-  })
-
-  it('renders the latest blog post title', async () => {
-    await renderPage()
-    expect(screen.getByText('Test Post')).toBeInTheDocument()
-  })
-
-  it('renders the Read post link with correct href', async () => {
-    await renderPage()
-    const link = screen.getByRole('link', { name: /Read post/i })
-    expect(link).toHaveAttribute('href', 'https://example.com/test-post')
-    expect(link).toHaveAttribute('target', '_blank')
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-  })
-
-  it('renders the blog thumbnail with correct src', async () => {
-    await renderPage()
-    const imgs = screen.getAllByRole('img')
-    const thumbnail = imgs.find((img) => img.getAttribute('src')?.includes('/thumbnails/blog/'))
-    expect(thumbnail).toHaveAttribute('src', '/thumbnails/blog/b_test-post.png')
-  })
-
-  it('still renders video empty state', async () => {
-    await renderPage()
-    expect(screen.getByText(/Our first video is on its way/i)).toBeInTheDocument()
   })
 })

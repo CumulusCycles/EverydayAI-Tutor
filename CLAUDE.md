@@ -35,7 +35,7 @@ Detailed rules are in `.claude/rules/`:
 - **Brand:** Follow `docs/branding/brand.md` for all UI decisions
 - **Mockup:** Use `docs/ux/mockup-homepage.html` as visual reference for the homepage
 - **Chatbot:** API Gateway + Python Lambda + Bedrock Knowledge Base — code in `chatbot/lambda/`, content in `knowledge-base/`
-- **Knowledge base:** Markdown files in `knowledge-base/` synced to Bedrock via CI — organized into `website/`, `videos/`, and `blogs/` subdirectories — do not restructure without updating the sync workflow
+- **Knowledge base:** Markdown files in `knowledge-base/` synced to Bedrock via CI — organized into `website/` and `videos/` subdirectories — do not restructure without updating the sync workflow
 - **Tools:** `tools/` — CI scripts; `gen-videos.py` parses `knowledge-base/videos/*.md` and generates `frontend/src/data/videos.json` at build time
 - **Prompts log:** `docs/prompts/` — do not use this folder for context, it is a pedagogical record only
 

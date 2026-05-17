@@ -5,7 +5,7 @@
 
 ## Overview
 
-React site hosted on AWS with an AI chat assistant backed by Amazon Bedrock. Content (videos, blog posts) is authored in Markdown and synced automatically to the site and chatbot via CI — no code edits required to publish.
+React site hosted on AWS with an AI chat assistant backed by Amazon Bedrock. Video content is authored in Markdown and synced automatically to the site and chatbot via CI — no code edits required to publish.
 
 ---
 
@@ -19,9 +19,8 @@ React site hosted on AWS with an AI chat assistant backed by Amazon Bedrock. Con
 │   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
 ├── knowledge-base/    # Markdown synced to Bedrock S3 bucket via CI
 │   ├── website/       # General site content (about, FAQ, learning journey, etc.)
-│   ├── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
-│   └── blogs/         # One MD file per blog post — frontmatter drives cards, prose drives chatbot
-├── tools/             # CI scripts — gen-videos.py and gen-blogs.py generate static JSON at build time
+│   └── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+├── tools/             # CI scripts — gen-videos.py generates static JSON at build time
 ├── docs/              # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/ # CI/CD — frontend, infrastructure, KB sync
 └── SETUP.md           # Full local + AWS + GitHub setup
@@ -122,7 +121,7 @@ AWS account is already bootstrapped in `us-east-1`. Do not run `cdk bootstrap` a
 
 ## Content Publishing Pipeline
 
-Video and blog content is authored as Markdown. CI handles the rest. Both pipelines follow the same pattern.
+Video content is authored as Markdown. CI handles the rest.
 
 ### Videos
 
@@ -132,15 +131,7 @@ Video and blog content is authored as Markdown. CI handles the rest. Both pipeli
 | Frontend CI job | `tools/gen-videos.py` parses all `knowledge-base/videos/*.md` → writes `frontend/src/data/videos.json` → `pnpm build` bundles it → S3 sync + CloudFront invalidation |
 | Knowledge-base CI job | `aws s3 sync --delete` → Bedrock ingestion job → chatbot KB updated |
 
-### Blog Posts
-
-| Step | What happens |
-|---|---|
-| Author commits MD + thumbnail | `knowledge-base/blogs/<postId>.md` + `frontend/public/thumbnails/blog/<postId>.png` |
-| Frontend CI job | `tools/gen-blogs.py` parses all `knowledge-base/blogs/*.md` → writes `frontend/src/data/blogs.json` → `pnpm build` bundles it → S3 sync + CloudFront invalidation |
-| Knowledge-base CI job | `aws s3 sync --delete` → Bedrock ingestion job → chatbot KB updated |
-
-No DynamoDB. No runtime API. Both catalogs are static JSON files bundled at build time.
+No DynamoDB. No runtime API. Video catalog is a static JSON file bundled at build time.
 
 ---
 
@@ -148,7 +139,7 @@ No DynamoDB. No runtime API. Both catalogs are static JSON files bundled at buil
 
 | Job | Trigger | Steps |
 |---|---|---|
-| Frontend | `frontend/**` or `knowledge-base/videos/**` or `knowledge-base/blogs/**` or `tools/**` changed | Generate `videos.json` + `blogs.json` → `pnpm build` → S3 sync → CloudFront invalidation |
+| Frontend | `frontend/**` or `knowledge-base/videos/**` or `tools/**` changed | Generate `videos.json` → `pnpm build` → S3 sync → CloudFront invalidation |
 | Infrastructure | `infrastructure/**` or `chatbot/**` changed | `cdk deploy --all` |
 | Knowledge-base | `knowledge-base/**` changed | S3 sync → Bedrock ingestion |
 
