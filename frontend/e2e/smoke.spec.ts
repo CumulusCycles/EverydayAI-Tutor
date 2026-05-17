@@ -14,11 +14,6 @@ test.describe('Smoke — all routes load without errors', () => {
     await expect(page.getByRole('heading', { name: 'Videos', level: 1 })).toBeVisible()
   })
 
-  test('/blog loads page heading', async ({ page }) => {
-    await page.goto('/blog')
-    await expect(page.getByRole('heading', { name: 'Blog', level: 1 })).toBeVisible()
-  })
-
   test('/about loads page heading', async ({ page }) => {
     await page.goto('/about')
     await expect(
@@ -46,7 +41,7 @@ test.describe('Smoke — all routes load without errors', () => {
 })
 
 test.describe('"Built with AI" nav link present on all pages', () => {
-  const routes = ['/', '/videos', '/blog', '/about', '/built-with', '/privacy']
+  const routes = ['/', '/videos', '/about', '/built-with', '/privacy']
 
   for (const route of routes) {
     test(`${route} shows "Built with AI" nav link`, async ({ page }) => {

@@ -22,8 +22,8 @@ describe('Footer', () => {
     renderFooter()
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Videos' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Blog' })).not.toBeInTheDocument()
   })
 
   it('renders YouTube subscribe link with correct href in a new tab', () => {

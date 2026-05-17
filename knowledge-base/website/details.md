@@ -55,13 +55,12 @@ EverydayAI Tutor is a YouTube channel and companion website for everyday people 
 
 ## Content Structure
 
-The site has five main sections:
+The site has four main sections:
 
-1. **Home** — Latest video and latest blog post, with a Subscribe CTA
+1. **Home** — Latest video, with a Subscribe CTA
 2. **Videos** — Full catalog of YouTube videos with thumbnails and descriptions
-3. **Blog** — Articles, guides, and practical AI tips
-4. **About** — Rob Frenette's background, mission, and why he created the channel
-5. **Built with AI** — Detailed explanation of how Claude Code built the site
+3. **About** — Rob Frenette's background, mission, and why he created the channel
+4. **Built with AI** — Detailed explanation of how Claude Code built the site
 
 ## Key Facts for Reference
 

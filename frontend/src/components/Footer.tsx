@@ -32,7 +32,6 @@ export default function Footer() {
               {[
                 { to: '/', label: 'Home' },
                 { to: '/videos', label: 'Videos' },
-                { to: '/blog', label: 'Blog' },
                 { to: '/about', label: 'About' },
                 { to: '/built-with', label: 'Built with AI' },
               ].map(({ to, label }) => (

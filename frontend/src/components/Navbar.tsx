@@ -6,7 +6,6 @@ const YT_URL = 'https://www.youtube.com/@EverydayAITutor'
 const navLinks = [
   { to: '/', label: 'Home', end: true },
   { to: '/videos', label: 'Videos', end: false },
-  { to: '/blog', label: 'Blog', end: false },
   { to: '/about', label: 'About', end: false },
   { to: '/built-with', label: 'Built with AI', end: false },
 ]

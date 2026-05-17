@@ -15,14 +15,14 @@ frontend/
 ├── src/
 │   ├── assets/        # Static assets (images, fonts)
 │   ├── components/    # Shared reusable components (including ChatWidget)
-│   ├── data/          # Generated JSON data files (videos.json, blogs.json) — seed [] committed
+│   ├── data/          # Generated JSON data files (videos.json) — seed [] committed
 │   ├── pages/         # Page-level components (one per route)
 │   ├── test/          # Vitest setup (setup.ts)
 │   ├── types/         # Shared TypeScript types and interfaces
 │   └── main.tsx       # App entry point
 ├── e2e/               # Playwright E2E tests
 ├── public/
-│   └── thumbnails/    # Static thumbnails — video/ and blog/ subdirectories
+│   └── thumbnails/    # Static thumbnails — video/ subdirectory
 ├── index.html
 ├── vite.config.ts
 └── tsconfig.json
@@ -53,7 +53,7 @@ frontend/
 
 ## Content Data
 
-Both videos and blog posts follow the same pipeline: Markdown frontmatter in `knowledge-base/` → Python generator → static JSON → Vite bundles at build time. Seed `[]` files are committed so fresh checkouts build without running the generators. CI overwrites them before building.
+Videos follow this pipeline: Markdown frontmatter in `knowledge-base/videos/` → Python generator → static JSON → Vite bundles at build time. A seed `[]` file is committed so fresh checkouts build without running the generator. CI overwrites it before building.
 
 ```typescript
 // frontend/src/types/content.ts
@@ -65,29 +65,17 @@ export interface Video {
   thumbnail: string     // filename only, e.g. "v_what_ai_actually_is.png"
   youtubeUrl: string
 }
-
-export interface BlogPost {
-  postId: string        // matches MD filename
-  title: string
-  description: string
-  publishDate: string   // ISO YYYY-MM-DD
-  postUrl: string       // external link
-  thumbnail: string     // filename only, e.g. "b_my-first-post.png"
-}
 ```
 
 Pages import JSON and cast to the appropriate type:
 ```typescript
 import videosData from '../data/videos.json'
-import blogsData from '../data/blogs.json'
-import type { Video, BlogPost } from '../types/content'
+import type { Video } from '../types/content'
 const videos = videosData as Video[]
-const posts = blogsData as BlogPost[]
 ```
 
 Thumbnail URLs are constructed in the page:
 - Videos: `` `/thumbnails/video/${video.thumbnail}` ``
-- Blog posts: `` `/thumbnails/blog/${post.thumbnail}` ``
 
 ## Routing
 
@@ -95,7 +83,6 @@ Thumbnail URLs are constructed in the page:
 |---|---|
 | `/` | `HomePage` |
 | `/videos` | `VideosPage` |
-| `/blog` | `BlogPage` |
 | `/about` | `AboutPage` |
 | `/built-with` | `BuiltWithAIPage` |
 | `/privacy` | `PrivacyPage` |

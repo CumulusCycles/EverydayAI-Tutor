@@ -287,7 +287,6 @@ No new steps needed here — the chatbot sync already works.
 - `stack.ts` — untouched
 - Bedrock KB sync workflow — untouched
 - `ContentCard.tsx` — untouched
-- `BlogPost` type and `posts.ts` — untouched
 - No new AWS resources of any kind
 
 ---

@@ -45,8 +45,8 @@ GitHub Actions workflow triggered on push to `main`. Three independent path-filt
 flowchart LR
     A([Push to main]) --> B{Path Filter}
 
-    B -->|frontend or\nknowledge-base/videos\nknowledge-base/blogs\nor tools changed| C[OIDC Auth]
-    C --> C1[gen-videos.py\ngen-blogs.py]
+    B -->|frontend or\nknowledge-base/videos\nor tools changed| C[OIDC Auth]
+    C --> C1[gen-videos.py]
     C1 --> C2[pnpm build]
     C2 --> C3[Sync /dist to S3]
     C3 --> C4[CloudFront\nInvalidation]
@@ -139,7 +139,7 @@ flowchart LR
 ```
 
 ### Flow Description
-1. A Markdown file is committed to `knowledge-base/` (videos, blogs, or website content) and merged to `main`
+1. A Markdown file is committed to `knowledge-base/` (videos or website content) and merged to `main`
 2. **GitHub Actions** knowledge-base job runs: `aws s3 sync knowledge-base/ → KB S3 bucket` (with `--delete` so S3 mirrors the repo exactly)
 3. **Bedrock ingestion job** is triggered via `bedrock-agent start-ingestion-job`
 4. **Bedrock Knowledge Base** chunks the Markdown content, creates vector embeddings, and stores them in the Vector Store
@@ -179,7 +179,7 @@ flowchart LR
 3. **Lambda (Python)** receives the query and calls Bedrock Knowledge Base
 4. **Bedrock Knowledge Base** performs semantic vector search against the **Vector Store**
 5. Relevant results are returned back through Lambda → API Gateway → Frontend
-6. User sees semantically matched results — blog posts and video content
+6. User sees semantically matched results — video content and site information
 
 ---
 
@@ -187,8 +187,8 @@ flowchart LR
 
 | Decision | Choice | Reason |
 |---|---|---|
-| Content source of truth | Markdown files in `knowledge-base/` | Single file per video/post, git-versioned, drives both frontend cards and chatbot KB |
-| Frontend content catalog | Static JSON (videos.json, blogs.json) | Build-time generation — no runtime API, no failure modes, free at any scale |
+| Content source of truth | Markdown files in `knowledge-base/` | Single file per video, git-versioned, drives both frontend cards and chatbot KB |
+| Frontend content catalog | Static JSON (videos.json) | Build-time generation — no runtime API, no failure modes, free at any scale |
 | Chatbot search index | Bedrock Knowledge Base | Semantic search, natural language queries, managed embeddings |
 | Vector store | S3 Vectors | Native AWS vector store — no separate service to manage |
 | Lambda runtime | Python | Best Bedrock SDK support |
