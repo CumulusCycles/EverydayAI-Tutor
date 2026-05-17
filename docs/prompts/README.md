@@ -51,3 +51,4 @@ prompts/
 | 19 | `session-19-remove-blog.md` | `refactor/remove-blog` | Remove blog functionality from every layer — pages, routes, nav, types, generator, CI, docs, KB content, Claude config |
 | 20 | `session-20-playlists.md` | `feature/playlists` | Add playlist support: `type` field on Video interface, `p_` ID prefix, playlist URL validation, Playlists section on VideosPage and HomePage |
 | 21 | `session-21-about-host-photo.md` | `feature/about-host-photo` | Add Rob's workspace photo to About page Host section; resized 1907×1064 → 800×446; 2-column grid layout (image left, bio right on desktop; stacked on mobile) |
+| 22 | `session-22-about-host-photo-size.md` | `fix/about-host-photo-size` | Follow-up fix: resize host photo from 800×446 (621 KB) to 600×334 (357 KB); add max-w-[500px] CSS cap to prevent full-column stretch on wide screens |

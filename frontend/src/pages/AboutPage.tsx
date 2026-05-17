@@ -117,7 +117,7 @@ export default function AboutPage() {
             <img
               src="/images/rob.png"
               alt="Rob Frenette at his workspace"
-              className="w-full rounded-xl shadow-sm"
+              className="w-full max-w-[500px] rounded-xl shadow-sm"
             />
             <div>
               <p className="text-brand-charcoal leading-relaxed mb-4">
