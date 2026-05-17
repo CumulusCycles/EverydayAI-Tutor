@@ -50,3 +50,4 @@ prompts/
 | 18 | `session-18-fix-built-with-chatbot-live.md` | `fix/built-with-ai-chatbot-live` | Fix stale "Coming Soon" content on BuiltWithAIPage and knowledge-base/website/built-with-claude.md — chatbot has been live for weeks; replaced badge, updated copy, added 4 missing tech stack entries |
 | 19 | `session-19-remove-blog.md` | `refactor/remove-blog` | Remove blog functionality from every layer — pages, routes, nav, types, generator, CI, docs, KB content, Claude config |
 | 20 | `session-20-playlists.md` | `feature/playlists` | Add playlist support: `type` field on Video interface, `p_` ID prefix, playlist URL validation, Playlists section on VideosPage and HomePage |
+| 21 | `session-21-about-host-photo.md` | `feature/about-host-photo` | Add Rob's workspace photo to About page Host section; resized 1907×1064 → 800×446; 2-column grid layout (image left, bio right on desktop; stacked on mobile) |
