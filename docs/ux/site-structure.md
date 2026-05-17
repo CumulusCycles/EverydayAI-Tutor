@@ -5,7 +5,7 @@
 
 ## Overview
 
-AIEverydayTutor.com is a channel hub — a clean, branded landing site that introduces the EverydayAI Tutor YouTube channel and showcases videos.
+AIEverydayTutor.com is a channel hub — a clean, branded landing site that introduces the EverydayAI Tutor YouTube channel and showcases videos and playlists.
 
 **Primary purpose at launch:** Present the EverydayAI Tutor brand and content in one place, with clear pathways to external content (YouTube).
 
@@ -17,8 +17,8 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 
 | Page | Route | Description |
 |---|---|---|
-| Home | `/` | Hero, channel intro, latest videos, subscribe CTA |
-| Videos | `/videos` | Full card listing of playlists and videos |
+| Home | `/` | Hero, channel intro, latest video, latest playlist, subscribe CTA |
+| Videos | `/videos` | Videos grid + Playlists section |
 | About | `/about` | Channel mission, host background, what viewers will learn |
 | Built with AI | `/built-with` | How the site was built using Claude Code and AWS |
 | Privacy Policy | `/privacy` | Minimal privacy statement — no personal data collected |
@@ -42,15 +42,15 @@ AIEverydayTutor.com is a channel hub — a clean, branded landing site that intr
 ## Shared Components
 
 ### ContentCard
-Reusable card component used on the Videos page and previews on Home.
+Reusable card component used for both videos and playlists on the Videos page and Home.
 
 | Field | Description |
 |---|---|
 | Thumbnail | Image |
-| Title | Video title |
+| Title | Video or playlist title |
 | Description | Short description or excerpt |
 | Publish Date | Date published |
-| External Link | Links out to YouTube video/playlist |
+| External Link | "Watch on YouTube" for videos; "View Playlist" for playlists |
 
 Cards open external links in a new tab.
 
@@ -79,10 +79,13 @@ Cards open external links in a new tab.
 
 **3. Latest Videos**
 - Section heading: "Latest Videos"
-- 3 most recent ContentCards
-- "View All Videos" link → `/videos`
+- 1 most recent video ContentCard
 
-**4. Subscribe CTA Banner**
+**4. Latest Playlist**
+- Section heading: "Latest Playlist"
+- 1 most recent playlist ContentCard
+
+**5. Subscribe CTA Banner**
 - Full-width section
 - "Ready to start learning AI?" or similar
 - Subscribe button → YouTube channel
@@ -91,7 +94,7 @@ Cards open external links in a new tab.
 
 ### Videos `/videos`
 
-**Goal:** Showcase all playlists and videos in a clean, browsable card grid.
+**Goal:** Showcase all videos and playlists in a clean, browsable layout.
 
 #### Sections
 
@@ -99,10 +102,17 @@ Cards open external links in a new tab.
 - Title: "Videos"
 - Short intro: "Practical AI tutorials for everyday people — from complete beginner to confident AI user."
 
-**2. Video Card Grid**
-- Full listing of all videos/playlists as ContentCards
+**2. Videos Grid**
+- Full listing of all videos as ContentCards
 - Ordered by publish date (newest first)
-- Each card links to YouTube video or playlist
+- Each card links to YouTube video
+- Link text: "Watch on YouTube"
+
+**3. Playlists Section**
+- Full listing of all playlists as ContentCards
+- Ordered by publish date (newest first)
+- Each card links to YouTube playlist
+- Link text: "View Playlist"
 
 ---
 
@@ -178,8 +188,8 @@ Content is authored as Markdown files in `knowledge-base/` — no CMS, no databa
 | Videos | `knowledge-base/videos/<videoId>.md` | CI runs `tools/gen-videos.py` → generates `frontend/src/data/videos.json` → bundled by Vite |
 | Chatbot KB | All `knowledge-base/**` MD files | CI syncs to Bedrock S3 bucket → ingestion job updates vector store |
 
-To publish a new video: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest.
-- Videos: see `docs/runbooks/New_Video.md`
+To publish a new video or playlist: commit the MD file + thumbnail PNG, open a PR, merge. CI handles the rest.
+- Videos and playlists: see `docs/runbooks/New_Video.md`
 
 ---
 

@@ -23,7 +23,7 @@ A React site (videos, about) with an **AI chat assistant** backed by API Gateway
 ├── chatbot/lambda/     # Python Lambda — Bedrock KB + converse API
 ├── knowledge-base/     # Markdown for Bedrock ingestion (synced via CI)
 │   ├── website/        #   General site content (about, FAQ, etc.)
-│   └── videos/         #   One MD file per video — drives cards + chatbot
+│   └── videos/         #   One MD file per video or playlist — drives cards + chatbot
 ├── tools/              # CI scripts — gen-videos.py generates static JSON
 ├── docs/               # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/  # CI/CD — frontend, infrastructure, KB sync

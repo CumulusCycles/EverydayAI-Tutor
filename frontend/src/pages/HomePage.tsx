@@ -2,7 +2,7 @@ import ContentCard from '../components/ContentCard'
 import videosData from '../data/videos.json'
 import type { Video } from '../types/content'
 
-const videos = videosData as Video[]
+const allItems = videosData as Video[]
 
 const YT_URL = 'https://www.youtube.com/@EverydayAITutor'
 
@@ -30,7 +30,8 @@ const learnItems = [
 ]
 
 export default function HomePage() {
-  const latestVideos = videos.slice(0, 1)
+  const latestVideos = allItems.filter((item) => item.type !== 'playlist').slice(0, 1)
+  const latestPlaylists = allItems.filter((item) => item.type === 'playlist').slice(0, 1)
 
   return (
     <>
@@ -118,6 +119,35 @@ export default function HomePage() {
                   thumbnailUrl={`/thumbnails/video/${video.thumbnail}`}
                   linkUrl={video.youtubeUrl}
                   linkText="Watch on YouTube"
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ── LATEST PLAYLIST ── */}
+      <section className="py-16 px-6 md:px-12 bg-brand-beige">
+        <div className="max-w-[1200px] mx-auto">
+          <h2 className="text-[28px] font-extrabold text-brand-navy mb-8">Latest Playlist</h2>
+          <div className="max-w-sm">
+            {latestPlaylists.length === 0 ? (
+              <ContentCard
+                title="Coming Soon"
+                description="Curated playlists are on the way."
+                linkUrl=""
+                linkText=""
+              />
+            ) : (
+              latestPlaylists.map((playlist) => (
+                <ContentCard
+                  key={playlist.videoId}
+                  title={playlist.title}
+                  description={playlist.description}
+                  publishDate={playlist.publishDate}
+                  thumbnailUrl={`/thumbnails/video/${playlist.thumbnail}`}
+                  linkUrl={playlist.youtubeUrl}
+                  linkText="View Playlist"
                 />
               ))
             )}

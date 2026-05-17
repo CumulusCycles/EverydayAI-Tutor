@@ -5,4 +5,5 @@ export interface Video {
   publishDate: string // ISO "YYYY-MM-DD"
   thumbnail: string // filename only, e.g. "v_what_ai_actually_is.png"
   youtubeUrl: string
+  type: 'video' | 'playlist'
 }

@@ -4,6 +4,7 @@
 
 AIEverydayTutor.com is a static channel hub for the EverydayAI Tutor YouTube channel.
 It showcases videos and playlists for people learning AI — no technical background required.
+Videos and playlists share the same MD pipeline and JSON schema; `type` field distinguishes them.
 
 ## Repo Structure
 
@@ -15,7 +16,7 @@ It showcases videos and playlists for people learning AI — no technical backgr
 │   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
 ├── knowledge-base/    # Markdown files synced to Bedrock S3 bucket via CI
 │   ├── website/       # General site content (about, FAQ, learning journey, etc.)
-│   └── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+│   └── videos/        # One MD file per video or playlist — frontmatter drives cards, prose drives chatbot
 ├── tools/             # CI scripts — gen-videos.py generates static JSON at build time
 └── docs/              # All project documentation
     ├── branding/      # Brand guide, color palette, image assets
@@ -56,7 +57,7 @@ When using an MCP server, always announce it before making the call:
 
 The site is live with a working chatbot backend. No authentication, no database.
 
-- Video content is managed as static JSON data files in `frontend/src/data/`
+- Video and playlist content is managed as static JSON in `frontend/src/data/videos.json`
 - Chatbot is live: API Gateway → Python Lambda → Bedrock Knowledge Base (RAG)
 - Knowledge base content lives in `knowledge-base/` as Markdown; CI syncs to Bedrock on push to main
 - No CMS, no user accounts, no newsletter — out of scope

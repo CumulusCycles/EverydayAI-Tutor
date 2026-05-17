@@ -4,6 +4,10 @@ gen-videos.py — Generate videos.json from Markdown frontmatter.
 Walks all *.md files in --knowledge-base-dir, validates YAML frontmatter,
 sorts by publishDate DESC (videoId ASC as tiebreak), and writes a JSON array
 to --output (or prints to stdout in --dry-run mode).
+
+Supports both videos (type: video, videoId prefix v_) and playlists
+(type: playlist, videoId prefix p_). The type field is optional and defaults
+to 'video' so existing MD files need no changes.
 """
 
 import argparse
@@ -16,11 +20,18 @@ from pathlib import Path
 import frontmatter
 
 
-# ── Required fields and their validators ──────────────────────────────────────
+# ── Regexes ───────────────────────────────────────────────────────────────────
 
-YOUTUBE_URL_RE = re.compile(r"^https://www\.youtube\.com/watch\?v=[A-Za-z0-9_-]{11}$")
-SNAKE_CASE_PREFIX_RE = re.compile(r"^v_[a-z0-9_]+$")
+YOUTUBE_VIDEO_URL_RE = re.compile(
+    r"^https://www\.youtube\.com/watch\?v=[A-Za-z0-9_-]{11}$"
+)
+YOUTUBE_PLAYLIST_URL_RE = re.compile(
+    r"^https://www\.youtube\.com/playlist\?list=[A-Za-z0-9_-]+$"
+)
+VIDEO_ID_RE = re.compile(r"^v_[a-z0-9_]+$")
+PLAYLIST_ID_RE = re.compile(r"^p_[a-z0-9_]+$")
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
 REQUIRED_FIELDS = [
     "videoId",
     "title",
@@ -30,16 +41,22 @@ REQUIRED_FIELDS = [
     "youtubeUrl",
 ]
 
+VALID_TYPES = ("video", "playlist")
+
 
 # ── Validation ────────────────────────────────────────────────────────────────
 
 
-def validate_video_id(video_id: object, filename_stem: str) -> str | None:
+def validate_video_id(
+    video_id: object, filename_stem: str, item_type: str
+) -> str | None:
     """Return an error message if videoId is invalid, else None."""
     if not isinstance(video_id, str):
         return "must be a string"
-    if not SNAKE_CASE_PREFIX_RE.match(video_id):
-        return "must be lowercase snake_case prefixed with 'v_'"
+    expected_prefix = "p_" if item_type == "playlist" else "v_"
+    id_re = PLAYLIST_ID_RE if item_type == "playlist" else VIDEO_ID_RE
+    if not id_re.match(video_id):
+        return f"must be lowercase snake_case prefixed with '{expected_prefix}'"
     if video_id != filename_stem:
         return f"must match filename (expected '{filename_stem}', got '{video_id}')"
     return None
@@ -76,12 +93,16 @@ def validate_thumbnail(
     return None
 
 
-def validate_youtube_url(youtube_url: object) -> str | None:
-    """Return an error message if youtubeUrl is invalid, else None."""
+def validate_youtube_url(youtube_url: object, item_type: str) -> str | None:
+    """Return an error message if youtubeUrl is invalid for the given type, else None."""
     if not isinstance(youtube_url, str):
         return "must be a string"
-    if not YOUTUBE_URL_RE.match(youtube_url):
-        return "must match https://www.youtube.com/watch?v=<11-char-id>"
+    if item_type == "playlist":
+        if not YOUTUBE_PLAYLIST_URL_RE.match(youtube_url):
+            return "must match https://www.youtube.com/playlist?list=<id>"
+    else:
+        if not YOUTUBE_VIDEO_URL_RE.match(youtube_url):
+            return "must match https://www.youtube.com/watch?v=<11-char-id>"
     return None
 
 
@@ -98,17 +119,24 @@ def validate_post(
     filename_stem = md_file.stem
     meta = post.metadata
 
+    # Validate type first — needed by other validators
+    item_type = str(meta.get("type", "video"))
+    if item_type not in VALID_TYPES:
+        errors.append(
+            f"{md_file.name}: field 'type' — must be one of {VALID_TYPES} (got '{item_type}')"
+        )
+        return errors
+
     # Check all required fields are present
     for field in REQUIRED_FIELDS:
         if field not in meta:
             errors.append(f"{md_file.name}: field '{field}' is missing")
 
     if errors:
-        # No point validating field values when fields are absent
         return errors
 
     # Validate individual fields
-    err = validate_video_id(meta["videoId"], filename_stem)
+    err = validate_video_id(meta["videoId"], filename_stem, item_type)
     if err:
         errors.append(f"{md_file.name}: field 'videoId' — {err}")
 
@@ -120,7 +148,7 @@ def validate_post(
     if err:
         errors.append(f"{md_file.name}: field 'thumbnail' — {err}")
 
-    err = validate_youtube_url(meta["youtubeUrl"])
+    err = validate_youtube_url(meta["youtubeUrl"], item_type)
     if err:
         errors.append(f"{md_file.name}: field 'youtubeUrl' — {err}")
 
@@ -147,6 +175,7 @@ def post_to_record(post: frontmatter.Post) -> dict:
         "publishDate": publish_date_str(meta["publishDate"]),
         "thumbnail": meta["thumbnail"],
         "youtubeUrl": meta["youtubeUrl"],
+        "type": str(meta.get("type", "video")),
     }
 
 
@@ -174,7 +203,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--knowledge-base-dir",
         required=True,
         type=Path,
-        help="Path to the folder containing video *.md files.",
+        help="Path to the folder containing video and playlist *.md files.",
     )
     parser.add_argument(
         "--thumbnails-dir",

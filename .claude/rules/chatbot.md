@@ -48,7 +48,7 @@ The `knowledge-base/` folder is organized into two subdirectories:
 | Subdirectory | Contents |
 |---|---|
 | `knowledge-base/website/` | General site content — about, FAQ, learning journey, site overview |
-| `knowledge-base/videos/` | One MD file per video — frontmatter drives the video card catalog; prose drives chatbot retrieval |
+| `knowledge-base/videos/` | One MD file per video or playlist — frontmatter drives the card catalog; prose drives chatbot retrieval |
 
 - CI syncs `knowledge-base/**` on push to `main` → Bedrock S3 bucket → ingestion job (with `--delete`, so S3 mirrors the repo exactly)
 - Do not move, rename, or restructure `knowledge-base/` without updating the sync workflow

@@ -34,24 +34,52 @@ def make_md(
     publish_date: str = "2026-01-15",
     thumbnail: str | None = None,
     youtube_url: str = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    item_type: str | None = None,
 ) -> Path:
     """Write a valid (by default) MD file with YAML frontmatter."""
     actual_video_id = video_id if video_id is not None else stem
     actual_thumbnail = thumbnail if thumbnail is not None else f"{actual_video_id}.png"
-    content = (
-        "---\n"
-        f"videoId: {actual_video_id}\n"
-        f"title: {title}\n"
-        f"description: {description}\n"
-        f"publishDate: '{publish_date}'\n"
-        f"thumbnail: {actual_thumbnail}\n"
-        f"youtubeUrl: {youtube_url}\n"
-        "---\n\n"
-        "Body text here.\n"
-    )
+    lines = [
+        "---\n",
+        f"videoId: {actual_video_id}\n",
+        f"title: {title}\n",
+        f"description: {description}\n",
+        f"publishDate: '{publish_date}'\n",
+        f"thumbnail: {actual_thumbnail}\n",
+        f"youtubeUrl: {youtube_url}\n",
+    ]
+    if item_type is not None:
+        lines.append(f"type: {item_type}\n")
+    lines.append("---\n\nBody text here.\n")
     path = kb_dir / f"{stem}.md"
-    path.write_text(content, encoding="utf-8")
+    path.write_text("".join(lines), encoding="utf-8")
     return path
+
+
+def make_playlist_md(
+    kb_dir: Path,
+    stem: str,
+    *,
+    video_id: str | None = None,
+    title: str = "Test Playlist Title",
+    description: str = "A short description.",
+    publish_date: str = "2026-01-15",
+    thumbnail: str | None = None,
+    youtube_url: str = "https://www.youtube.com/playlist?list=PLdQw4w9WgXcQ",
+) -> Path:
+    """Write a valid playlist MD file."""
+    actual_video_id = video_id if video_id is not None else stem
+    return make_md(
+        kb_dir,
+        stem,
+        video_id=actual_video_id,
+        title=title,
+        description=description,
+        publish_date=publish_date,
+        thumbnail=thumbnail,
+        youtube_url=youtube_url,
+        item_type="playlist",
+    )
 
 
 def make_thumbnail(thumbs_dir: Path, video_id: str) -> Path:
@@ -120,6 +148,59 @@ class TestSingleValidVideo:
         assert record["publishDate"] == "2026-03-10"
         assert record["thumbnail"] == "v_intro.png"
         assert record["youtubeUrl"] == "https://www.youtube.com/watch?v=abcdefghijk"
+        assert record["type"] == "video"
+
+    def test_type_defaults_to_video_when_absent(self, tmp_path: Path) -> None:
+        """MD files without a type field produce type: video in output."""
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "v_intro")
+        make_md(kb, "v_intro")  # no item_type arg
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code == 0
+        data = json.loads(output.read_text())
+        assert data[0]["type"] == "video"
+
+
+class TestSingleValidPlaylist:
+    """Single valid playlist MD file produces correct JSON structure."""
+
+    def test_output_content(self, tmp_path: Path) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "p_beginner_series")
+        make_playlist_md(
+            kb,
+            "p_beginner_series",
+            title="Beginner Series",
+            description="Start here.",
+            publish_date="2026-04-01",
+            youtube_url="https://www.youtube.com/playlist?list=PLabc123",
+        )
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code == 0
+        data = json.loads(output.read_text())
+        assert len(data) == 1
+
+        record = data[0]
+        assert record["videoId"] == "p_beginner_series"
+        assert record["type"] == "playlist"
+        assert record["youtubeUrl"] == "https://www.youtube.com/playlist?list=PLabc123"
+        assert record["thumbnail"] == "p_beginner_series.png"
 
 
 class TestSortByPublishDate:
@@ -169,6 +250,39 @@ class TestSortTiebreakByVideoId:
         assert exit_code == 0
         data = json.loads(output.read_text())
         assert [r["videoId"] for r in data] == ["v_apple", "v_zebra"]
+
+
+class TestMixedVideosAndPlaylists:
+    """Videos and playlists sort together by publishDate DESC."""
+
+    def test_mixed_sort(self, tmp_path: Path) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "v_intro")
+        make_md(kb, "v_intro", publish_date="2026-03-01")
+
+        make_thumbnail(thumbs, "p_beginner")
+        make_playlist_md(
+            kb,
+            "p_beginner",
+            publish_date="2026-04-01",
+            youtube_url="https://www.youtube.com/playlist?list=PLxyz",
+        )
+
+        make_thumbnail(thumbs, "v_advanced")
+        make_md(kb, "v_advanced", publish_date="2026-05-01")
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code == 0
+        data = json.loads(output.read_text())
+        assert [r["videoId"] for r in data] == ["v_advanced", "p_beginner", "v_intro"]
+        assert [r["type"] for r in data] == ["video", "playlist", "video"]
 
 
 class TestMissingRequiredFields:
@@ -262,6 +376,75 @@ class TestVideoIdMismatch:
         assert "videoId" in captured.err
 
 
+class TestInvalidType:
+    """Unknown type value produces non-zero exit."""
+
+    def test_bad_type(self, tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "v_test")
+        make_md(kb, "v_test", item_type="short")
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code != 0
+        captured = capsys.readouterr()
+        assert "v_test.md" in captured.err
+        assert "type" in captured.err
+
+
+class TestPlaylistIdPrefix:
+    """Playlist videoId must use p_ prefix; v_ prefix on a playlist fails."""
+
+    def test_v_prefix_on_playlist_fails(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture
+    ) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "v_series")
+        make_md(kb, "v_series", item_type="playlist")
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code != 0
+        captured = capsys.readouterr()
+        assert "videoId" in captured.err
+
+    def test_p_prefix_on_video_fails(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture
+    ) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "p_intro")
+        make_md(
+            kb,
+            "p_intro",
+            video_id="p_intro",
+            youtube_url="https://www.youtube.com/watch?v=abcdefghijk",
+        )
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code != 0
+        captured = capsys.readouterr()
+        assert "videoId" in captured.err
+
+
 class TestInvalidYoutubeUrl:
     """Bad youtubeUrl patterns produce non-zero exit."""
 
@@ -276,7 +459,7 @@ class TestInvalidYoutubeUrl:
             "",
         ],
     )
-    def test_bad_url(
+    def test_bad_video_url(
         self, bad_url: str, tmp_path: Path, capsys: pytest.CaptureFixture
     ) -> None:
         kb = tmp_path / "videos"
@@ -294,6 +477,35 @@ class TestInvalidYoutubeUrl:
         assert exit_code != 0
         captured = capsys.readouterr()
         assert "v_test.md" in captured.err
+        assert "youtubeUrl" in captured.err
+
+    @pytest.mark.parametrize(
+        "bad_url",
+        [
+            "https://www.youtube.com/watch?v=abcdefghijk",  # video URL on a playlist
+            "https://youtu.be/PLdQw4w9WgXcQ",
+            "https://www.youtube.com/playlist?list=",  # empty list ID
+            "",
+        ],
+    )
+    def test_bad_playlist_url(
+        self, bad_url: str, tmp_path: Path, capsys: pytest.CaptureFixture
+    ) -> None:
+        kb = tmp_path / "videos"
+        kb.mkdir()
+        thumbs = tmp_path / "thumbnails"
+        thumbs.mkdir()
+        output = tmp_path / "videos.json"
+
+        make_thumbnail(thumbs, "p_series")
+        make_playlist_md(kb, "p_series", youtube_url=bad_url)
+
+        args = make_args(kb, thumbs, output)
+        exit_code = run(args)
+
+        assert exit_code != 0
+        captured = capsys.readouterr()
+        assert "p_series.md" in captured.err
         assert "youtubeUrl" in captured.err
 
 

@@ -19,7 +19,7 @@ React site hosted on AWS with an AI chat assistant backed by Amazon Bedrock. Vid
 │   └── lambda/        # Python Lambda — handler.py, service.py, requirements.txt
 ├── knowledge-base/    # Markdown synced to Bedrock S3 bucket via CI
 │   ├── website/       # General site content (about, FAQ, learning journey, etc.)
-│   └── videos/        # One MD file per video — frontmatter drives cards, prose drives chatbot
+│   └── videos/        # One MD file per video or playlist — frontmatter drives cards, prose drives chatbot
 ├── tools/             # CI scripts — gen-videos.py generates static JSON at build time
 ├── docs/              # Brand, UX, tech docs, Claude Code prompt log
 ├── .github/workflows/ # CI/CD — frontend, infrastructure, KB sync
@@ -121,17 +121,17 @@ AWS account is already bootstrapped in `us-east-1`. Do not run `cdk bootstrap` a
 
 ## Content Publishing Pipeline
 
-Video content is authored as Markdown. CI handles the rest.
+Video and playlist content is authored as Markdown. CI handles the rest. Both use the same pipeline and JSON schema; the `type` field (`video` | `playlist`) differentiates them.
 
-### Videos
+### Videos and Playlists
 
 | Step | What happens |
 |---|---|
-| Author commits MD + thumbnail | `knowledge-base/videos/<videoId>.md` + `frontend/public/thumbnails/video/<videoId>.png` |
-| Frontend CI job | `tools/gen-videos.py` parses all `knowledge-base/videos/*.md` → writes `frontend/src/data/videos.json` → `pnpm build` bundles it → S3 sync + CloudFront invalidation |
+| Author commits MD + thumbnail | `knowledge-base/videos/<id>.md` + `frontend/public/thumbnails/video/<id>.png` |
+| Frontend CI job | `tools/gen-videos.py` parses all `knowledge-base/videos/*.md` → writes `frontend/src/data/videos.json` (flat array, sorted by publishDate DESC) → `pnpm build` bundles it → S3 sync + CloudFront invalidation |
 | Knowledge-base CI job | `aws s3 sync --delete` → Bedrock ingestion job → chatbot KB updated |
 
-No DynamoDB. No runtime API. Video catalog is a static JSON file bundled at build time.
+Video IDs use `v_` prefix; playlist IDs use `p_` prefix. The generator validates each against its declared type. No DynamoDB. No runtime API. Both catalogs are in a single static JSON file bundled at build time.
 
 ---
 

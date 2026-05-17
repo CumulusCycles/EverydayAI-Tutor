@@ -6,11 +6,13 @@ Operational guides for common publishing tasks. These are the day-to-day instruc
 
 | Runbook | When to use |
 |---|---|
-| [`New_Video.md`](New_Video.md) | After publishing a new video to YouTube — add it to the site and chatbot KB |
+| [`New_Video.md`](New_Video.md) | After publishing a new video or playlist — add it to the site and chatbot KB |
 
 ---
 
 ## How the pipeline works
+
+Videos and playlists share the same pipeline:
 
 1. Commit an MD file to `knowledge-base/videos/` (frontmatter → site card; prose → chatbot)
 2. Commit a thumbnail PNG to `frontend/public/thumbnails/video/`
